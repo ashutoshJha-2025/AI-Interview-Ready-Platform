@@ -46,7 +46,12 @@ async function registerUser(req, res) {
 
     return res.status(201).json({
         message: 'User registered successfully. Verify your email using the OTP sent to your inbox.',
-        userId: user,
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            isVerified: user.isVerified,
+        },
         accessToken
     });
 }
@@ -125,16 +130,6 @@ async function logoutUser(req, res) {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
     });
-
-    try {
-        await sendLogoutAlertEmail(
-            user.email,
-            user.username,
-            new Date().toLocaleString()
-        );
-    } catch (error) {
-        console.error('[Mail] failed to send logout alert:', error?.message || error);
-    }
 
     return res.status(200).json({
         message: 'Logged out successfully'

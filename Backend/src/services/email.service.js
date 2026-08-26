@@ -42,35 +42,36 @@ const sendEmail = async ({ to, subject, html, text }) => {
 };
 
 async function sendWelcomeEmail(userEmail, name, otp) {
-    const subject = 'Welcome to SecureBank';
+    const subject = 'Welcome to Interview Ready Platform';
 
     const text = `
         Dear ${name},
 
-        Welcome to SecureBank.
+        Welcome to Interview Ready Platform!
 
         Your One-Time Password (OTP) for email verification is:
         ${otp}
 
         This OTP is valid for 5 minutes.
 
-        If you did not request this verification, please ignore this email or contact our support team immediately.
+        If you did not create an account with us, please ignore this email or contact our support team immediately.
 
         For your security:
         - Never share this OTP with anyone.
         - This OTP can only be used once.
 
+        Good luck with your interview prep!
         Regards,
-        SecureBank Team
+        Interview Ready Team
     `;
 
     const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
-            <h2>SecureBank Email Verification</h2>
+            <h2>Verify your Interview Ready account</h2>
 
             <p>Dear <strong>${name}</strong>,</p>
 
-            <p>Thank you for registering with SecureBank.</p>
+            <p>Thanks for signing up with Interview Ready \u2014 let's get you interview-ready.</p>
 
             <p>Please use the following One-Time Password (OTP) to verify your email address:</p>
 
@@ -105,14 +106,15 @@ async function sendWelcomeEmail(userEmail, name, otp) {
                 <strong>Security Reminder</strong>
                 <ul>
                     <li>Never share your OTP with anyone.</li>
-                    <li>SecureBank will never ask for your OTP.</li>
+                    <li>Interview Ready will never ask for your OTP.</li>
                     <li>If you did not request this verification, ignore this email and contact support.</li>
                 </ul>
             </div>
 
             <p>
+                Good luck with your prep!<br />
                 Regards,<br />
-                <strong>SecureBank Team</strong>
+                <strong>Interview Ready Team</strong>
             </p>
         </div>
     `;
@@ -126,22 +128,22 @@ async function sendWelcomeEmail(userEmail, name, otp) {
 }
 
 async function sendLoginAlertEmail(userEmail, name, ipAddress, device, loginTime) {
-    const subject = 'Security Alert: New Login Detected';
+    const subject = 'Security Alert: New Login to Your Interview Ready Account';
 
     const text = `
         Dear ${name},
 
-        A login to your SecureBank account was detected.
+        A login to your Interview Ready account was detected.
 
         Time: ${loginTime}
         IP Address: ${ipAddress}
         Device: ${device}
 
-        If this was you, no action is required.
+        If this was you, no action is required \u2014 go crush that mock interview.
 
         If you do not recognize this activity, immediately change your password and contact support.
 
-        SecureBank Security Team
+        Interview Ready Security Team
     `;
 
     const html = `
@@ -150,7 +152,7 @@ async function sendLoginAlertEmail(userEmail, name, ipAddress, device, loginTime
 
         <p>Hello <strong>${name}</strong>,</p>
 
-        <p>A login to your SecureBank account was detected.</p>
+        <p>A login to your Interview Ready account was detected.</p>
 
         <table style="border-collapse: collapse;">
             <tr>
@@ -176,7 +178,7 @@ async function sendLoginAlertEmail(userEmail, name, ipAddress, device, loginTime
 
         <p>
             Regards,<br>
-            SecureBank Security Team
+            Interview Ready Security Team
         </p>
     </div>
     `;
@@ -189,49 +191,4 @@ async function sendLoginAlertEmail(userEmail, name, ipAddress, device, loginTime
     });
 }
 
-async function sendLogoutAlertEmail(userEmail, name, logoutTime) {
-    const subject = 'Security Alert: Logout Detected';
-
-    const text = `
-        Dear ${name},
-
-        A logout from your SecureBank account was detected.
-
-        Time: ${logoutTime}
-
-        If this was not you, please change your password immediately.
-
-        SecureBank Security Team
-    `;
-
-    const html = `
-    <div style="font-family: Arial, sans-serif; max-width:600px;">
-        <h2>Security Alert</h2>
-
-        <p>Hello <strong>${name}</strong>,</p>
-
-        <p>A logout from your SecureBank account was detected.</p>
-
-        <p><strong>Time:</strong> ${logoutTime}</p>
-
-        <div style="background:#fff3cd;padding:15px;border-radius:8px;">
-            <strong>Didn't log out?</strong><br>
-            Change your password immediately and contact support.
-        </div>
-
-        <p>
-            Regards,<br>
-            SecureBank Security Team
-        </p>
-    </div>
-    `;
-
-    await sendEmail({
-        to: userEmail,
-        subject,
-        text,
-        html,
-    });
-}
-
-export { sendWelcomeEmail, sendLoginAlertEmail, sendLogoutAlertEmail, checkEmailConnection }
+export { sendWelcomeEmail, sendLoginAlertEmail, checkEmailConnection }
