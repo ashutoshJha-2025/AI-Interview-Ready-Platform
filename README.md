@@ -1,1 +1,1 @@
-# phase 1/ authentication completed
+profile page completed, now its time to create a userDetailsModel, login, register page and connect profile page to backend with edit details.
