@@ -1,1 +1,6 @@
-profile page completed, now its time to create a userDetailsModel, login, register page and connect profile page to backend with edit details.
+1. user login alert email change
+2. additional profile details models + one example
+3. get me() + show details on profile
+4. update profile
+5. verify email
+6. forget password, TDS
