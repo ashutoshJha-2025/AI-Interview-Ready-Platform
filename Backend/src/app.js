@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { authRoutes } from './routes/auth.routes.js'
+import { profileRoutes } from './routes/profile.routes.js'
 import morgan from 'morgan'
 
 const app = express()
@@ -13,5 +14,6 @@ app.use(cors({
     credentials: true
 }))
 app.use('/api/auth-user', authRoutes)
+app.use('/api/profile', profileRoutes)
 
 export { app }

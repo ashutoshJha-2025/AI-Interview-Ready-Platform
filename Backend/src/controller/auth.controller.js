@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { userDetail } from "../models/userDetail.model.js";
 import { storeOtp } from "../services/redis.service.js";
 import { sendWelcomeEmail, sendLoginAlertEmail } from '../services/email.service.js'
 
@@ -94,13 +95,7 @@ async function loginUser(req, res) {
     res.setHeader('x-access-token', accessToken);
 
     try {
-        await sendLoginAlertEmail(
-            user.email,
-            user.username,
-            req.ip || 'unknown',
-            req.get('user-agent') || 'unknown',
-            new Date().toLocaleString()
-        );
+        await sendLoginAlertEmail(user.email, user.username, new Date().toLocaleString());
     } catch (error) {
         console.error('[Mail] failed to send login alert:', error?.message || error);
     }
@@ -136,19 +131,4 @@ async function logoutUser(req, res) {
     });
 }
 
-async function getMe(req, res) {
-    const userId = req.user?._id
-    const findUser = await User.findByIdAndUpdate(userId).select('-password -refreshToken')
-
-    if (!findUser) {
-        return res.status(404).json({
-            message: 'User not found'
-        })
-    }
-    return res.status(200).json({
-        message: 'User info retrieved successfully',
-        findUser
-    })
-}
-
-export { loginUser, registerUser, logoutUser, getMe }
+export { loginUser, registerUser, logoutUser }

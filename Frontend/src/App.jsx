@@ -5,17 +5,19 @@ import LogIn from "./pages/Login"
 import Register from "./pages/Register"
 import { ToastMessageBox } from "./components/ToastMessageBox"
 import EmailVerification from "./components/EmailVerification"
+import ProfileUpdate from "./components/ProfileUpdate"
 
 const App = () => {
   return (
     <>
-    <ToastMessageBox />
+      <ToastMessageBox />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/email-verifiied" element={<EmailVerification />} />
+        <Route path="/profile/edit-details" element={<ProfileUpdate />} />
       </Routes>
     </>
   )

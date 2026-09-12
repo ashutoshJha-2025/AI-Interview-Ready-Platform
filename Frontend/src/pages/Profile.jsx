@@ -1,14 +1,28 @@
 import { Link } from "react-router-dom"
 import ProfileCard from "../components/ProfileCard.jsx";
-import { Upload, Plus, MailWarning } from "lucide-react";
+import { Plus, MailWarning } from "lucide-react";
 import axios from 'axios';
 import { showSuccess, showError } from '../components/ToastMessageBox.jsx'
 import { useNavigate } from "react-router-dom";
-
+import { useState, useEffect } from "react";
 
 const Profile = () => {
+    const [data, setData] = useState()
     const navigate = useNavigate()
 
+    async function getMe() {
+        try {
+            const response = await axios.get(`http://localhost:3000/api/profile/get-me`, { withCredentials: true })
+            setData(response?.data)
+            console.log(response?.data)
+        } catch (error) {
+            console.log(error.response?.data?.message || error.response?.data?.errors[0]?.msg || error.message || 'Invalid credentials')
+        }
+    }
+
+    useEffect(() => {
+        getMe()
+    }, [])
     async function logout() {
         try {
             const response = await axios.post(`http://localhost:3000/api/auth-user/logout`, {}, { withCredentials: true })
@@ -19,6 +33,12 @@ const Profile = () => {
         }
     }
 
+    const date = data?.profileDetails?.updatedAt ? new Date(data.profileDetails.updatedAt).toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+    }) : '';
+
 
     return (
         <div id="profile-page" className="w-full min-h-screen bg-[#FAF6EF]">
@@ -26,7 +46,7 @@ const Profile = () => {
             {/* Header */}
             <div className="w-full sticky top-0 z-30 backdrop-blur-md bg-white/90 border-b border-[#EDE6D4] px-6 md:px-12 py-3.5 shadow-sm flex items-center justify-between">
                 <span className="text-[#57534E] font-medium text-sm">
-                    Profile updated at: <span className="text-[#292524] font-semibold">27 August 2026</span>
+                    Profile updated at: <span className="text-[#292524] font-semibold">{date}</span>
                 </span>
 
                 <div className="flex items-center gap-2 border border-gray-200 rounded-full px-2.5 py-1.5">
@@ -48,7 +68,7 @@ const Profile = () => {
                 <div className="w-full lg:w-80 shrink-0 flex flex-col gap-5">
 
                     {/* Profile card */}
-                    <ProfileCard />
+                    <ProfileCard data={data} />
                 </div>
 
                 {/* Right column */}
@@ -61,8 +81,7 @@ const Profile = () => {
                         </div>
                         <div className="px-6 py-4">
                             <p className="text-sm text-[#57534E] leading-relaxed">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti in, eum corporis iusto
-                                possimus laborum blanditiis cum mollitia eligendi ad eaque, sequi voluptatum.
+                                {data?.profileDetails?.description || null}
                             </p>
                         </div>
                     </div>
@@ -75,20 +94,24 @@ const Profile = () => {
                                 <h2 className="text-xs font-bold text-[#78716C] uppercase tracking-widest">Skills</h2>
                             </div>
                             <div className="px-6 py-4 flex flex-wrap gap-2">
-                                <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#FBF3E0] text-[#8A6A2C] text-sm font-medium border border-[#EFDDAF] transition-colors hover:bg-[#0B4D3B] hover:text-[#F8E7C9] cursor-default">
-                                    Java
-                                </span>
-                                <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#FBF3E0] text-[#8A6A2C] text-sm font-medium border border-[#EFDDAF] transition-colors hover:bg-[#0B4D3B] hover:text-[#F8E7C9] cursor-default">
-                                    React
-                                </span>
+                                {(data?.profileDetails?.skills || []).map((skill) => (
+                                    <span key={skill} className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#FBF3E0] text-[#8A6A2C] text-sm font-medium border border-[#EFDDAF] transition-colors hover:bg-[#0B4D3B] hover:text-[#F8E7C9] cursor-default">
+                                        {skill}
+                                    </span>
+                                ))}
+
+                                {(!data?.profileDetails?.skills || data?.profileDetails?.skills.length === 0) && <p className="text-sm text-slate-400">No skills added yet.</p>}
                             </div>
                         </div>
 
-                        <label className="bg-white rounded-2xl border border-dashed border-[#D6D3D1] shadow-sm hover:border-[#C9A24B] hover:bg-[#FBF6E9] transition-all duration-300 cursor-pointer flex flex-col items-center justify-center gap-2 px-6 py-6 text-center">
-                            <Upload size={22} className="text-[#A8A29E]" />
-                            <span className="text-sm font-medium text-[#78716C]">Upload Resume</span>
-                            <input type="file" accept=".pdf" className="hidden" />
-                        </label>
+                        <div className="bg-white rounded-2xl border border-[#EDE6D4] shadow-sm hover:shadow-md transition-shadow duration-300">
+                            <div className="px-6 py-4 border-b border-[#EDE6D4]">
+                                <h2 className="text-xs font-bold text-[#78716C] uppercase tracking-widest">Resume</h2>
+                            </div>
+                            <div className="px-6 py-4 flex flex-wrap gap-2">
+                                {data?.profileDetails?.resumeUrl || 'No resume added yet'}
+                            </div>
+                        </div>
                     </div>
 
                     {/* Previous Interviews */}

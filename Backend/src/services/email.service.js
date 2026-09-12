@@ -127,61 +127,86 @@ async function sendWelcomeEmail(userEmail, name, otp) {
     });
 }
 
-async function sendLoginAlertEmail(userEmail, name, ipAddress, device, loginTime) {
-    const subject = 'Security Alert: New Login to Your Interview Ready Account';
+async function sendLoginAlertEmail(userEmail, name, loginTime) {
+    const subject = 'Welcome Back to Interview Ready!';
 
     const text = `
-        Dear ${name},
-
-        A login to your Interview Ready account was detected.
-
-        Time: ${loginTime}
-        IP Address: ${ipAddress}
-        Device: ${device}
-
-        If this was you, no action is required \u2014 go crush that mock interview.
-
-        If you do not recognize this activity, immediately change your password and contact support.
-
-        Interview Ready Security Team
+       Welcome back to Interview Ready! 
+       
+       We're glad to have you back. Your account was successfully logged in at: ${loginTime} 
+       
+       You can now continue your interview preparation, practice mock interviews, and work towards becoming interview ready. 
+       
+       If you did not log in to your account, please change your password immediately and contact our support team. 
+       
+       Didn't log in? 
+       If you don't recognize this login, please secure your account immediately. 
+       
+       Regards, 
+       Interview Ready Team
     `;
 
     const html = `
-    <div style="font-family: Arial, sans-serif; max-width:600px;">
-        <h2>Security Alert</h2>
+    <div style="
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: auto;
+        color: #292524;
+    ">
 
-        <p>Hello <strong>${name}</strong>,</p>
+        <h2>Welcome Back to Interview Ready! 👋</h2>
 
-        <p>A login to your Interview Ready account was detected.</p>
+        <p>Dear <strong>${name}</strong>,</p>
 
-        <table style="border-collapse: collapse;">
-            <tr>
-                <td><strong>Time:</strong></td>
-                <td>${loginTime}</td>
-            </tr>
-            <tr>
-                <td><strong>IP Address:</strong></td>
-                <td>${ipAddress}</td>
-            </tr>
-            <tr>
-                <td><strong>Device:</strong></td>
-                <td>${device}</td>
-            </tr>
-        </table>
+        <p>
+            Welcome back! We're glad to have you with us again.
+        </p>
 
-        <br>
+        <p>
+            Your Interview Ready account was successfully logged in at:
+        </p>
 
-        <div style="background:#fff3cd;padding:15px;border-radius:8px;">
-            <strong>Didn't log in?</strong><br>
-            Change your password immediately and contact support.
+        <div style="
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        ">
+            <strong>Login Time:</strong> ${loginTime}
         </div>
 
         <p>
-            Regards,<br>
-            Interview Ready Security Team
+            You can now continue your interview preparation, practice mock
+            interviews, and work towards becoming interview-ready.
         </p>
+
+        <div style="
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin-top: 20px;
+        ">
+            <strong>Didn't log in?</strong>
+
+            <p style="margin-bottom: 0;">
+                If you don't recognize this login, please change your password
+                immediately and contact our support team to secure your account.
+            </p>
+        </div>
+
+        <p>
+            Keep learning, keep practicing, and keep moving closer to your
+            dream opportunity! 🚀
+        </p>
+
+        <p>
+            Regards,<br />
+            <strong>Interview Ready Team</strong>
+        </p>
+
     </div>
-    `;
+`;
 
     await sendEmail({
         to: userEmail,
