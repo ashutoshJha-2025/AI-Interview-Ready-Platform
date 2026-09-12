@@ -1,6 +1,6 @@
 import { User } from "../models/user.model.js";
-import { checkRedisConnection, storeOtp } from "../services/redis.service.js";
-import { sendWelcomeEmail, sendLoginAlertEmail, sendLogoutAlertEmail } from '../services/email.service.js'
+import { storeOtp } from "../services/redis.service.js";
+import { sendWelcomeEmail, sendLoginAlertEmail } from '../services/email.service.js'
 
 async function registerUser(req, res) {
     const { username, email, password } = req.body;
@@ -45,7 +45,7 @@ async function registerUser(req, res) {
     });
 
     return res.status(201).json({
-        message: 'User registered successfully. Verify your email using the OTP sent to your inbox.',
+        message: 'User registered successfully',
         user: {
             id: user._id,
             username: user.username,

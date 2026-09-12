@@ -1,19 +1,23 @@
-import { Lottie } from "lottie-react";
-import { Mail, MapPin, Star, Pencil, Upload, Plus } from "lucide-react";
-import userIconAnimation from '../assets/wired-lineal-21-avatar-hover-looking-around.json'
-import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom"
+import ProfileCard from "../components/ProfileCard.jsx";
+import { Upload, Plus, MailWarning } from "lucide-react";
+import axios from 'axios';
+import { showSuccess, showError } from '../components/ToastMessageBox.jsx'
+import { useNavigate } from "react-router-dom";
+
 
 const Profile = () => {
-    const lottieRef = useRef();
+    const navigate = useNavigate()
 
-    useEffect(() => {
-        lottieRef.current?.play();
-    }, []);
-
-    const handleClick = () => {
-        lottieRef.current?.stop();
-        lottieRef.current?.play();
-    };
+    async function logout() {
+        try {
+            const response = await axios.post(`http://localhost:3000/api/auth-user/logout`, {}, { withCredentials: true })
+            showSuccess('Logged out successfully')
+            navigate('/')
+        } catch (error) {
+            showError(error.response?.data?.message || error.response?.data?.errors[0]?.msg || error.message || 'Unauthorized user, login / register to continue !')
+        }
+    }
 
 
     return (
@@ -25,7 +29,14 @@ const Profile = () => {
                     Profile updated at: <span className="text-[#292524] font-semibold">27 August 2026</span>
                 </span>
 
-                <button className="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors">
+                <div className="flex items-center gap-2 border border-gray-200 rounded-full px-2.5 py-1.5">
+                    <MailWarning size={20} className="text-[#C9A24B] shrink-0" />
+                    <Link to="/email-verifiied" className="text-sm font-semibold text-[#292524]">Verify your email</Link>
+                </div>
+
+                <button
+                    onClick={() => logout()}
+                    className="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors">
                     Sign Out
                 </button>
             </div>
@@ -33,53 +44,11 @@ const Profile = () => {
             {/* Main content */}
             <div className="w-full flex flex-col lg:flex-row items-start justify-center gap-6 px-6 md:px-12 py-8">
 
-                {/* Profile card */}
-                <div className="w-full lg:w-80 shrink-0 bg-linear-to-br from-[#0B4D3B] to-[#073C2E] rounded-3xl flex flex-col items-center py-6 px-6 shadow-lg shadow-[#0B4D3B]/15 transition-shadow hover:shadow-xl hover:shadow-[#0B4D3B]/20">
+                {/* Left column: profile card + verification card */}
+                <div className="w-full lg:w-80 shrink-0 flex flex-col gap-5">
 
-                    <div className="w-full flex justify-end -mb-2">
-                        <span className="text-[#073C2E] bg-[#C9A24B] font-semibold text-[11px] tracking-wide px-3 py-1 rounded-full">
-                            WEB DEV
-                        </span>
-                    </div>
-
-                    <div className="w-22 h-22 my-4 rounded-full border-2 border-[#C9A24B] bg-[#F8E7C9]/10 flex items-center justify-center">
-                        <Lottie
-                            lottieRef={lottieRef}
-                            onClick={handleClick}
-                            src={userIconAnimation}
-                            loop={false}
-                            autoplay={true}
-                            style={{ width: "80%", height: "80%", cursor: "pointer" }}
-                        />
-                    </div>
-
-                    <span className="text-[#F8E7C9] text-lg font-semibold">Ashutosh Jha</span>
-                    <span className="text-[#F8E7C9]/65 text-sm mb-4">@ashutoshJha-2025</span>
-
-                    <div className="w-full border-t border-dashed border-[#F8E7C9]/25 mb-4" />
-
-                    <div className="w-full flex flex-col gap-3 mb-5 text-[#F8E7C9] text-sm">
-                        <div className="flex items-center gap-2.5">
-                            <MapPin size={16} className="text-[#C9A24B]" />
-                            <span>Mumbai, Maharashtra</span>
-                        </div>
-                        <div className="flex items-center gap-2.5">
-                            <Mail size={16} className="text-[#C9A24B]" />
-                            <span className="truncate">jhaashutosh0811@gmail.com</span>
-                        </div>
-                        <div className="flex items-center gap-2.5">
-                            <Star size={16} className="text-[#C9A24B]" />
-                            <span>Avg. Score: <strong>9.5</strong></span>
-                        </div>
-                    </div>
-
-                    <button
-                        type="button"
-                        className="w-full flex items-center justify-center gap-2 text-[#073C2E] bg-[#C9A24B] text-sm font-semibold rounded-xl px-6 py-2.5 cursor-pointer transition-all hover:bg-[#E0BB63] hover:-translate-y-0.5"
-                    >
-                        <Pencil size={16} />
-                        Edit Details
-                    </button>
+                    {/* Profile card */}
+                    <ProfileCard />
                 </div>
 
                 {/* Right column */}
