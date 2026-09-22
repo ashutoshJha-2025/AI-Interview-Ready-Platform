@@ -108,9 +108,14 @@ const Profile = () => {
                             <div className="px-6 py-4 border-b border-[#EDE6D4]">
                                 <h2 className="text-xs font-bold text-[#78716C] uppercase tracking-widest">Resume</h2>
                             </div>
-                            <div className="px-6 py-4 flex flex-wrap gap-2">
-                                {data?.profileDetails?.resumeUrl || 'No resume added yet'}
-                            </div>
+                            <a
+                                href={data?.profileDetails?.resumeUrl || '#'}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-6 py-4 flex flex-wrap gap-2 text-md text-blue-600 hover:underline"
+                            >
+                                {data?.profileDetails?.resumeUrl ? 'View Resume' : 'No resume added yet'}
+                            </a>
                         </div>
                     </div>
 

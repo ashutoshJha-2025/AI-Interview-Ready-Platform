@@ -15,30 +15,8 @@ const ProfileUpdate = () => {
     });
     const [skills, setSkills] = useState([]);
     const [skillInput, setSkillInput] = useState("");
+    const [resumeFile, setResumeFile] = useState(null);
     const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const result = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/me`, {
-                    withCredentials: true,
-                });
-                const user = result.data.data || result.data;
-                setFormData({
-                    name: user.name || "",
-                    location: user.location || "",
-                    fieldOfExpertise: user.fieldOfExpertise || "",
-                    description: user.aboutMe || "",
-                });
-                setSkills(user.skills || []);
-            } catch (error) {
-                showError(error.response?.data?.message || "Could not load your profile");
-            } finally {
-                setFetching(false);
-            }
-        };
-        fetchProfile();
-    }, []);
 
     const addSkill = () => {
         const value = skillInput.trim();
@@ -53,6 +31,11 @@ const ProfileUpdate = () => {
 
     const removeSkill = (skillToRemove) => {
         setSkills(skills.filter((s) => s !== skillToRemove));
+    };
+
+    const handleResumeChange = (e) => {
+        const file = e.target.files?.[0] || null;
+        setResumeFile(file);
     };
 
     const handleSkillKeyDown = (e) => {
@@ -70,7 +53,8 @@ const ProfileUpdate = () => {
             formData.location.trim() ||
             formData.fieldOfExpertise.trim() ||
             formData.description.trim() ||
-            skills.length > 0;
+            skills.length > 0 ||
+            resumeFile;
 
         if (!hasAnyField) {
             showError("At least one field is required to update");
@@ -79,10 +63,27 @@ const ProfileUpdate = () => {
 
         setLoading(true);
         try {
+            const formPayload = new FormData();
+
+            formPayload.append("profileName", formData.profileName.trim());
+            formPayload.append("location", formData.location.trim());
+            formPayload.append("fieldOfExpertise", formData.fieldOfExpertise.trim());
+            formPayload.append("description", formData.description.trim());
+            formPayload.append("skills", JSON.stringify(skills));
+
+            if (resumeFile) {
+                formPayload.append("resume", resumeFile);
+            }
+
             const result = await axios.patch(
-                `${import.meta.env.VITE_API_URL}/api/profile/edit-details`,
-                { ...formData, skills },
-                { withCredentials: true }
+                `http://localhost:3000/api/profile/edit-details`,
+                formPayload,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
             );
             showSuccess(result.data.message || "Profile updated");
             setTimeout(() => navigate("/profile"), 800);
@@ -111,17 +112,16 @@ const ProfileUpdate = () => {
                     <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
 
                         <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-[#57534E] mb-1.5">
+                            <label htmlFor="profileName" className="block text-sm font-medium text-[#57534E] mb-1.5">
                                 Profile Name
                             </label>
                             <div className="flex items-center gap-2 rounded-xl border border-[#E7E1D3] bg-[#FAF6EF]/50 px-3.5 py-2.5 focus-within:border-[#0B4D3B] focus-within:ring-2 focus-within:ring-[#0B4D3B]/15 transition-all">
                                 <User size={16} className="text-[#A8A29E] shrink-0" />
                                 <input
-                                    id="name"
+                                    id="profileName"
                                     type="text"
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    placeholder="Your name"
+                                    value={formData.profileName}
+                                    onChange={(e) => setFormData({ ...formData, profileName: e.target.value })}
                                     className="w-full bg-transparent text-sm text-[#292524] outline-none"
                                 />
                             </div>
@@ -214,8 +214,10 @@ const ProfileUpdate = () => {
 
                         <label className="bg-white rounded-2xl border border-dashed border-[#D6D3D1] shadow-sm hover:border-[#C9A24B] hover:bg-[#FBF6E9] transition-all duration-300 cursor-pointer flex flex-col items-center justify-center gap-2 px-6 py-6 text-center">
                             <Upload size={22} className="text-[#A8A29E]" />
-                            <span className="text-sm font-medium text-[#78716C]">Upload Resume</span>
-                            <input type="file" accept=".pdf" className="hidden" />
+                            <span className="text-sm font-medium text-[#78716C]">
+                                {resumeFile ? resumeFile.name : "Upload Resume"}
+                            </span>
+                            <input type="file" accept=".pdf" className="hidden" onChange={handleResumeChange} />
                         </label>
 
                         <div className="flex gap-3 pt-2">

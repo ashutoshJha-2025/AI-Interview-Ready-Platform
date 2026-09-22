@@ -4,41 +4,11 @@ import { body, validationResult } from 'express-validator'
 
 const verifyJwt = async (req, res, next) => {
     const refreshToken = req.cookies?.refreshToken
-    const authHeader = req.headers?.authorization || '';
-    const accessToken = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
-
-    if (!accessToken && !refreshToken) {
-        return res.status(401).json({
-            message: 'Unauthorized request, token is missing'
-        })
-    }
-
-    if (accessToken) {
-        try {
-            const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
-            const user = await User.findById(decoded.id).select('+refreshToken');
-
-            if (!user) {
-                return res.status(401).json({
-                    message: 'User not found',
-                });
-            }
-
-            req.user = user;
-            return next();
-        } catch (err) {
-            if (err.name !== 'TokenExpiredError') {
-                return res.status(401).json({
-                    message: 'Invalid or expired access token',
-                });
-            }
-        }
-    }
 
     if (!refreshToken) {
         return res.status(401).json({
-            message: 'Unauthorized request, refresh token is missing'
-        });
+            message: 'Unauthorized request, token is missing'
+        })
     }
 
     try {

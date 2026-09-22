@@ -1,5 +1,6 @@
 import { User } from "../models/user.model.js";
 import { userDetail } from "../models/userDetail.model.js";
+import { uploadFile } from "../services/imageKit.service.js";
 
 async function updateProfileInfo(req, res) {
     const userId = req.user?._id;
@@ -11,6 +12,7 @@ async function updateProfileInfo(req, res) {
     }
 
     const { description, skills, location, fieldOfExpertise, profileName } = req.body;
+    const file = req.file;
 
     const hasFields =
         description !== undefined ||
@@ -62,10 +64,20 @@ async function updateProfileInfo(req, res) {
                 .filter(Boolean);
         }
 
+        if (file) {
+            const result = await uploadFile(file.buffer);
+            if (!result?.url) {
+                return res.status(500).json({
+                    message: 'File upload failed'
+                });
+            }
+            updateFields.resumeUrl = result.url;
+        }
+
         const updatedProfile = await userDetail.findOneAndUpdate(
             { userId },
             { $set: updateFields },
-            { new: true, upsert: true, runValidators: true }
+            { new: true }
         );
 
         if (!updatedProfile) {
@@ -122,4 +134,5 @@ async function getMe(req, res) {
         });
     }
 }
+
 export { updateProfileInfo, getMe }

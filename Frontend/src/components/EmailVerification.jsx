@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import axios from "axios";
 import { showSuccess, showError } from "../components/ToastMessageBox.jsx";
 import { Upload, Plus, ShieldCheck, Clock, MailWarning } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 
 const EmailVerification = () => {
@@ -10,13 +11,14 @@ const EmailVerification = () => {
     const [otp, setOtp] = useState("");
     const [sendingOtp, setSendingOtp] = useState(false);
     const [verifying, setVerifying] = useState(false);
+    const navigate = useNavigate()
 
 
     const handleGetOtp = async () => {
         setSendingOtp(true);
         try {
             const result = await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/auth/resend-email-verification`,
+                `http://localhost:3000/api/auth-user/send-otp`,
                 {},
                 { withCredentials: true }
             );
@@ -36,7 +38,7 @@ const EmailVerification = () => {
         setVerifying(true);
         try {
             const result = await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/auth/verify-email`,
+                `http://localhost:3000/api/auth-user/verify-otp`,
                 { otp },
                 { withCredentials: true }
             );
@@ -46,6 +48,7 @@ const EmailVerification = () => {
             showError(error.response?.data?.message || error.message || "Invalid or expired code");
         } finally {
             setVerifying(false);
+            navigate('/profile')
         }
     };
 
