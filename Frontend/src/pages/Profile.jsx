@@ -23,6 +23,7 @@ const Profile = () => {
     useEffect(() => {
         getMe()
     }, [])
+
     async function logout() {
         try {
             const response = await axios.post(`http://localhost:3000/api/auth-user/logout`, {}, { withCredentials: true })
@@ -33,11 +34,12 @@ const Profile = () => {
         }
     }
 
-    const date = data?.profileDetails?.updatedAt ? new Date(data.profileDetails.updatedAt).toLocaleDateString("en-US", {
+    const d = data?.profileDetails?.updatedAt || data?.userInfo?.updatedAt
+    const date = new Date(d).toLocaleDateString("en-US", {
         day: "2-digit",
         month: "short",
         year: "numeric",
-    }) : '';
+    })
 
 
     return (
@@ -49,7 +51,7 @@ const Profile = () => {
                     Profile updated at: <span className="text-[#292524] font-semibold">{date}</span>
                 </span>
 
-                <div className="flex items-center gap-2 border border-gray-200 rounded-full px-2.5 py-1.5">
+                <div className={`flex items-center gap-2 border border-gray-200 rounded-full px-2.5 py-1.5 ${data?.userInfo?.isVerified === true ? 'hidden' : ''}`}>
                     <MailWarning size={20} className="text-[#C9A24B] shrink-0" />
                     <Link to="/email-verifiied" className="text-sm font-semibold text-[#292524]">Verify your email</Link>
                 </div>
@@ -81,7 +83,7 @@ const Profile = () => {
                         </div>
                         <div className="px-6 py-4">
                             <p className="text-sm text-[#57534E] leading-relaxed">
-                                {data?.profileDetails?.description || null}
+                                {data?.profileDetails?.description || 'No bio added yet.'}
                             </p>
                         </div>
                     </div>
@@ -125,14 +127,14 @@ const Profile = () => {
                             Previous Interviews
                         </h2>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                            <button className="bg-white rounded-2xl border border-[#EDE6D4] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 px-4 py-5 text-center cursor-pointer">
+                            {/* <button className="bg-white rounded-2xl border border-[#EDE6D4] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 px-4 py-5 text-center cursor-pointer">
                                 <p className="text-sm font-semibold text-[#292524]">Reactjs</p>
                                 <p className="text-xs text-[#A8A29E] mt-1">Score: 9.2</p>
                             </button>
                             <button className="bg-white rounded-2xl border border-[#EDE6D4] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 px-4 py-5 text-center cursor-pointer">
                                 <p className="text-sm font-semibold text-[#292524]">Java</p>
                                 <p className="text-xs text-[#A8A29E] mt-1">Score: 9.8</p>
-                            </button>
+                            </button> */}
                             <button className="bg-[#FBF6E9] rounded-2xl border border-dashed border-[#E7CE8F] hover:border-[#C9A24B] hover:-translate-y-0.5 transition-all duration-200 px-4 py-5 flex flex-col items-center justify-center gap-1.5 cursor-pointer">
                                 <span className="w-7 h-7 rounded-full border border-[#C9A24B] flex items-center justify-center">
                                     <Plus size={14} className="text-[#C9A24B]" />

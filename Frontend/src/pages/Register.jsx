@@ -44,7 +44,7 @@ const Register = () => {
             showSuccess(result.data.message)
             setTimeout(() => {
                 navigate('/profile')
-                showInfo('Verify your email using the OTP sent to your inbox')
+                showInfo('Verify your email to get started.');
                 setFormData({ username: '', email: '', password: '', confirmPassword: '' })
             }, 1000)
         } catch (error) {

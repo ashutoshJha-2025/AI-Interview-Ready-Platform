@@ -64,15 +64,6 @@ userSchema.methods.generateRefreshToken = async function () {
     return refreshToken
 }
 
-userSchema.methods.generateAccessToken = async function () {
-    const accessToken = jwt.sign(
-        { id: this._id },
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
-    )
-    return accessToken
-}
-
 userSchema.methods.isRefreshTokenCorrect = async function (token) {
     return await bcrypt.compare(token, this.refreshToken)
 }

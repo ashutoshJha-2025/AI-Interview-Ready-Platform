@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ArrowLeft, User, MapPin, Briefcase, X, Upload } from "lucide-react";
@@ -65,11 +65,21 @@ const ProfileUpdate = () => {
         try {
             const formPayload = new FormData();
 
-            formPayload.append("profileName", formData.profileName.trim());
-            formPayload.append("location", formData.location.trim());
-            formPayload.append("fieldOfExpertise", formData.fieldOfExpertise.trim());
-            formPayload.append("description", formData.description.trim());
-            formPayload.append("skills", JSON.stringify(skills));
+            const appendIfFilled = (key, value) => {
+                const normalized = typeof value === "string" ? value.trim() : value;
+                if (normalized !== "" && normalized !== undefined && normalized !== null) {
+                    formPayload.append(key, normalized);
+                }
+            };
+
+            appendIfFilled("profileName", formData.profileName);
+            appendIfFilled("location", formData.location);
+            appendIfFilled("fieldOfExpertise", formData.fieldOfExpertise);
+            appendIfFilled("description", formData.description);
+
+            if (skills.length) {
+                formPayload.append("skills", JSON.stringify(skills));
+            }
 
             if (resumeFile) {
                 formPayload.append("resume", resumeFile);
@@ -80,9 +90,6 @@ const ProfileUpdate = () => {
                 formPayload,
                 {
                     withCredentials: true,
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
                 }
             );
             showSuccess(result.data.message || "Profile updated");
@@ -121,6 +128,7 @@ const ProfileUpdate = () => {
                                     id="profileName"
                                     type="text"
                                     value={formData.profileName}
+                                    placeholder="Enter your name"
                                     onChange={(e) => setFormData({ ...formData, profileName: e.target.value })}
                                     className="w-full bg-transparent text-sm text-[#292524] outline-none"
                                 />

@@ -14,7 +14,7 @@ body,
   overflow-x: hidden;
 }
 
-:root {
+/* :root {
   --primary-bg-color: #064E3B;
   --secondary-bg-color: #0A5A44;
 
@@ -28,4 +28,4 @@ body,
   --tag-text-color: #064E3B;
 
   --accent-color: #C9A24B;
-}
+} */

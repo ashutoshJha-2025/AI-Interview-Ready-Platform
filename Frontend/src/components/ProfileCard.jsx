@@ -5,7 +5,6 @@ import { Mail, MapPin, Star, Pencil, ShieldCheck } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
 const ProfileCard = ({ data = {} }) => {
-    console.log(data)
     const lottieRef = useRef();
     const navigate = useNavigate()
 
@@ -24,7 +23,7 @@ const ProfileCard = ({ data = {} }) => {
 
                 <div className="w-full flex justify-end -mb-2">
                     <span className="text-[#073C2E] bg-[#C9A24B] font-semibold text-[11px] tracking-wide px-3 py-1 rounded-full">
-                        {data?.profileDetails?.fieldOfExpertise}
+                        {data?.profileDetails?.fieldOfExpertise || 'Not set'}
                     </span>
                 </div>
 
@@ -56,11 +55,11 @@ const ProfileCard = ({ data = {} }) => {
                     </div>
                     <div className="flex items-center gap-2.5">
                         <MapPin size={16} className="text-[#C9A24B]" />
-                        <span>{data?.profileDetails?.location || null}</span>
+                        <span>{data?.profileDetails?.location || 'Not set'}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                         <Mail size={16} className="text-[#C9A24B]" />
-                        <span className="truncate">{data?.userInfo?.email || null}</span>
+                        <span className="truncate">{data?.userInfo?.email || 'Not set'}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                         <Star size={16} className="text-[#C9A24B]" />

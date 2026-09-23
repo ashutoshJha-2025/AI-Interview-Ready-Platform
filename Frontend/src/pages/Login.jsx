@@ -2,7 +2,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
-import { showSuccess, showError, showWarning } from "../components/ToastMessageBox.jsx";
+import { showSuccess, showError, showWarning, showInfo } from "../components/ToastMessageBox.jsx";
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' })
@@ -100,7 +100,9 @@ const Login = () => {
                         </div>
 
                         <div className="flex justify-end text-sm">
-                            <Link to="/forgot-password" className="text-[#0B4D3B] font-medium hover:text-[#C9A24B] transition-colors">
+                            <Link 
+                                onClick={() => showInfo('Password reset is not available at the moment.')}
+                            to="" className="text-[#0B4D3B] font-medium hover:text-[#C9A24B] transition-colors">
                                 Forgot password?
                             </Link>
                         </div>

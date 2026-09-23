@@ -4,7 +4,6 @@ import { uploadFile } from "../services/imageKit.service.js";
 
 async function updateProfileInfo(req, res) {
     const userId = req.user?._id;
-
     if (!userId) {
         return res.status(401).json({
             message: "Unauthorized request",
@@ -14,70 +13,83 @@ async function updateProfileInfo(req, res) {
     const { description, skills, location, fieldOfExpertise, profileName } = req.body;
     const file = req.file;
 
-    const hasFields =
-        description !== undefined ||
-        skills !== undefined ||
-        location !== undefined ||
-        fieldOfExpertise !== undefined ||
-        profileName !== undefined;
-
-    if (!hasFields) {
-        return res.status(400).json({
-            message: "At least one field is required to update",
-        });
-    }
+    const sanitizeString = (value) => {
+        if (typeof value !== "string") return undefined;
+        const trimmed = value.trim();
+        return trimmed ? trimmed : undefined;
+    };
 
     try {
         const updateFields = {};
 
-        if (profileName !== undefined) {
-            updateFields.profileName = profileName.trim();
-        }
-        if (description !== undefined) {
-            updateFields.description = description.trim();
-        }
-        if (location !== undefined) {
-            updateFields.location = location.trim();
-        }
-        if (fieldOfExpertise !== undefined) {
-            updateFields.fieldOfExpertise = fieldOfExpertise.trim();
-        }
+        const safeProfileName = sanitizeString(profileName);
+        const safeDescription = sanitizeString(description);
+        const safeLocation = sanitizeString(location);
+        const safeFieldOfExpertise = sanitizeString(fieldOfExpertise);
 
-        if (skills !== undefined) {
-            let skillsArray = [];
+        if (safeProfileName !== undefined) updateFields.profileName = safeProfileName;
+        if (safeDescription !== undefined) updateFields.description = safeDescription;
+        if (safeLocation !== undefined) updateFields.location = safeLocation;
+        if (safeFieldOfExpertise !== undefined) updateFields.fieldOfExpertise = safeFieldOfExpertise;
 
-            if (Array.isArray(skills)) {
-                skillsArray = skills;
-            } else if (typeof skills === "string") {
+        let skillsArray = [];
+
+        if (Array.isArray(skills)) {
+            skillsArray = skills;
+        } else if (typeof skills === "string") {
+            const trimmedSkills = skills.trim();
+            if (trimmedSkills) {
                 try {
-                    skillsArray = JSON.parse(skills);
+                    const parsed = JSON.parse(trimmedSkills);
+                    if (Array.isArray(parsed)) {
+                        skillsArray = parsed;
+                    }
                 } catch {
-                    skillsArray = skills
+                    skillsArray = trimmedSkills
                         .split(",")
                         .map((skill) => skill.trim())
                         .filter(Boolean);
                 }
             }
+        }
 
-            updateFields.skills = skillsArray
-                .map((skill) => String(skill).trim())
-                .filter(Boolean);
+        const cleanedSkills = skillsArray
+            .map((skill) => String(skill).trim())
+            .filter(Boolean);
+
+        if (cleanedSkills.length) {
+            updateFields.skills = cleanedSkills;
         }
 
         if (file) {
             const result = await uploadFile(file.buffer);
             if (!result?.url) {
                 return res.status(500).json({
-                    message: 'File upload failed'
+                    message: "File upload failed",
                 });
             }
             updateFields.resumeUrl = result.url;
         }
 
+        if (Object.keys(updateFields).length === 0) {
+            return res.status(400).json({
+                message: "At least one valid field is required to update",
+            });
+        }
+
         const updatedProfile = await userDetail.findOneAndUpdate(
-            { userId },
-            { $set: updateFields },
-            { new: true }
+            { userId: userId },
+            {
+                $set: updateFields,
+                $setOnInsert: {
+                    userId: userId,
+                },
+            },
+            {
+                new: true,
+                upsert: true,
+                runValidators: true,
+            }
         );
 
         if (!updatedProfile) {
@@ -88,7 +100,6 @@ async function updateProfileInfo(req, res) {
 
         return res.status(200).json({
             message: "User profile info updated successfully",
-            additionalInfo: updatedProfile,
         });
     } catch (error) {
         return res.status(500).json({
@@ -111,7 +122,7 @@ async function getMe(req, res) {
     try {
         const userInfo = await User.findById(userId)
         const profileDetails = await userDetail
-            .findById(userId)
+            .findOne({ userId })
             .populate('userId', '-password -refreshToken')
             .lean();
 

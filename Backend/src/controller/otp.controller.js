@@ -1,4 +1,4 @@
-import { sendWelcomeEmail } from '../services/email.service.js';
+import { OtpEmail } from '../services/email.service.js';
 import { storeOtp, verifyOtp } from '../services/redis.service.js';
 
 async function sendOtp(req, res) {
@@ -15,7 +15,7 @@ async function sendOtp(req, res) {
     await storeOtp(user._id.toString(), otp);
 
     try {
-        await sendWelcomeEmail(user.email, user.username, otp);
+        await OtpEmail(user.email, otp);
         return res.status(200).json({ message: 'OTP sent successfully' });
     } catch (error) {
         console.error('[Mail] failed to send verification email:', error?.message || error);

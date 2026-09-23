@@ -1,6 +1,4 @@
 import { User } from "../models/user.model.js";
-import { userDetail } from "../models/userDetail.model.js";
-import { storeOtp } from "../services/redis.service.js";
 import { sendWelcomeEmail, sendLoginAlertEmail } from '../services/email.service.js'
 
 async function registerUser(req, res) {
@@ -27,13 +25,9 @@ async function registerUser(req, res) {
 
     const user = await User.create({ username, email, password });
     const refreshToken = await user.generateRefreshToken()
-    const accessToken = await user.generateAccessToken()
-
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    await storeOtp(user._id.toString(), otp);
 
     try {
-        await sendWelcomeEmail(user.email, user.username, otp);
+        await sendWelcomeEmail(user.email, user.username);
     } catch (error) {
         console.error(error)
     }
@@ -42,7 +36,7 @@ async function registerUser(req, res) {
         httpOnly: true,
         secure: true,
         sameSite: 'none',
-        maxAge: 15 * 24 * 60 * 60 * 1000
+        maxAge: 2 * 24 * 60 * 60 * 1000
     });
 
     return res.status(201).json({
@@ -53,7 +47,6 @@ async function registerUser(req, res) {
             email: user.email,
             isVerified: user.isVerified,
         },
-        accessToken
     });
 }
 
@@ -81,18 +74,16 @@ async function loginUser(req, res) {
         });
     }
 
-    const accessToken = await user.generateAccessToken();
     const refreshToken = await user.generateRefreshToken();
 
     const cookieOptions = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 15 * 24 * 60 * 60 * 1000,
+        maxAge: 2 * 24 * 60 * 60 * 1000,
     };
 
     res.cookie('refreshToken', refreshToken, cookieOptions);
-    res.setHeader('x-access-token', accessToken);
 
     try {
         await sendLoginAlertEmail(user.email, user.username, new Date().toLocaleString());
@@ -102,7 +93,6 @@ async function loginUser(req, res) {
 
     return res.status(200).json({
         message: 'User logged in successfully',
-        accessToken,
         user: {
             id: user._id,
             username: user.username,

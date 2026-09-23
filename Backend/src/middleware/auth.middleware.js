@@ -20,10 +20,6 @@ const verifyJwt = async (req, res, next) => {
                 message: 'Invalid refresh token'
             });
         }
-
-        const newAccessToken = await user.generateAccessToken();
-        res.setHeader('x-access-token', newAccessToken);
-
         req.user = user;
         return next();
     } catch (error) {

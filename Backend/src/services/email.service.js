@@ -28,7 +28,7 @@ const checkEmailConnection = async () => {
 const sendEmail = async ({ to, subject, html, text }) => {
     try {
         await transporter.sendMail({
-            from: `"SecureBank" <${process.env.GMAIL_USER}>`,
+            from: `"InterviewReady | Get Hired!" <${process.env.GMAIL_USER}>`,
             to,
             subject,
             text,
@@ -41,82 +41,70 @@ const sendEmail = async ({ to, subject, html, text }) => {
     }
 };
 
-async function sendWelcomeEmail(userEmail, name, otp) {
-    const subject = 'Welcome to Interview Ready Platform';
+async function sendWelcomeEmail(userEmail, name) {
+    const subject = 'Welcome Message';
 
     const text = `
         Dear ${name},
 
         Welcome to Interview Ready Platform!
 
-        Your One-Time Password (OTP) for email verification is:
-        ${otp}
+        We're excited to have you with us. Your account has been successfully created, and you're now ready to start preparing for your interviews.
 
-        This OTP is valid for 5 minutes.
+        With Interview Ready, you can practice interviews, improve your skills, and get valuable feedback to help you become more confident and interview - ready.
 
-        If you did not create an account with us, please ignore this email or contact our support team immediately.
+        Good luck with your interview preparation!
 
-        For your security:
-        - Never share this OTP with anyone.
-        - This OTP can only be used once.
-
-        Good luck with your interview prep!
         Regards,
         Interview Ready Team
     `;
 
     const html = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
-            <h2>Verify your Interview Ready account</h2>
+            <h2 style="color: #222;">
+                Welcome to Interview Ready!
+            </h2>
 
             <p>Dear <strong>${name}</strong>,</p>
 
-            <p>Thanks for signing up with Interview Ready \u2014 let's get you interview-ready.</p>
+            <p>
+                We're excited to have you with us.
+            </p>
 
-            <p>Please use the following One-Time Password (OTP) to verify your email address:</p>
+            <p>
+                Your account has been successfully created, and you're now ready
+                to start preparing for your interviews.
+            </p>
 
             <div style="
                 background: #f5f5f5;
-                border: 1px solid #ddd;
                 border-radius: 8px;
                 padding: 20px;
-                text-align: center;
                 margin: 20px 0;
             ">
-                <span style="
-                    font-size: 32px;
-                    font-weight: bold;
-                    letter-spacing: 8px;
-                ">
-                    ${otp}
-                </span>
+                <h3 style="margin-top: 0;">
+                    Start Your Interview Preparation
+                </h3>
+
+                <p style="margin-bottom: 0;">
+                    Practice interviews, improve your skills, and get valuable
+                    feedback to become more confident and interview-ready.
+                </p>
             </div>
 
             <p>
-                <strong>Validity:</strong> This OTP will expire in
-                <strong>5 minutes</strong>.
+                We're glad to have you on board. It's time to start preparing
+                and take the next step toward your career goals!
             </p>
 
-            <div style="
-                background: #fff8e1;
-                border-left: 4px solid #ffc107;
-                padding: 12px;
-                margin-top: 20px;
-            ">
-                <strong>Security Reminder</strong>
-                <ul>
-                    <li>Never share your OTP with anyone.</li>
-                    <li>Interview Ready will never ask for your OTP.</li>
-                    <li>If you did not request this verification, ignore this email and contact support.</li>
-                </ul>
-            </div>
+            <p>
+                Good luck with your interview preparation!
+            </p>
 
             <p>
-                Good luck with your prep!<br />
                 Regards,<br />
                 <strong>Interview Ready Team</strong>
             </p>
-        </div>
+        </div >
     `;
 
     await sendEmail({
@@ -130,9 +118,7 @@ async function sendWelcomeEmail(userEmail, name, otp) {
 async function sendLoginAlertEmail(userEmail, name, loginTime) {
     const subject = 'Welcome Back to Interview Ready!';
 
-    const text = `
-       Welcome back to Interview Ready! 
-       
+    const text = `       
        We're glad to have you back. Your account was successfully logged in at: ${loginTime} 
        
        You can now continue your interview preparation, practice mock interviews, and work towards becoming interview ready. 
@@ -154,7 +140,7 @@ async function sendLoginAlertEmail(userEmail, name, loginTime) {
         color: #292524;
     ">
 
-        <h2>Welcome Back to Interview Ready! 👋</h2>
+        <h2>Welcome Back to Interview Ready!</h2>
 
         <p>Dear <strong>${name}</strong>,</p>
 
@@ -197,7 +183,7 @@ async function sendLoginAlertEmail(userEmail, name, loginTime) {
 
         <p>
             Keep learning, keep practicing, and keep moving closer to your
-            dream opportunity! 🚀
+            dream opportunity! 
         </p>
 
         <p>
@@ -216,4 +202,49 @@ async function sendLoginAlertEmail(userEmail, name, loginTime) {
     });
 }
 
-export { sendWelcomeEmail, sendLoginAlertEmail, checkEmailConnection }
+async function OtpEmail(userEmail, otp) {
+    const subject = 'Your Interview Ready Login OTP';
+
+    const text = `
+        Hello,
+        
+        Welcome back to Interview Ready 👋
+        
+        Your login OTP is: ${otp}
+        
+        This code is valid for a short time and can be used only once. If this wasn't you, please ignore this message.
+        
+        Need help? Reach us at jhaashutosh0811@gmail.com
+        
+        Regards,
+        Interview Ready
+    `.trim();
+
+    const html = `
+        <div style="font-family: Arial, sans-serif; font-size: 15px; line-height: 1.6; color: #292524; max-width: 480px;">
+            <p>Hello,</p>
+
+            <p>Welcome back to <strong>Interview Ready</strong> 👋</p>
+
+            <p>Your login OTP is: <strong style="font-size: 17px; letter-spacing: 1px;">${otp}</strong></p>
+
+            <p>This code is valid for a short time and can be used only once. If this wasn't you, please ignore this message.</p>
+
+            <p>Need help? Reach us at <a href="mailto:jhaashutosh0811@gmail.com" style="color: #0B4D3B;"> jhaashutosh0811@gmail.com</a></p>
+
+            <p>
+                Regards,<br />
+                <strong>Interview Ready</strong>
+            </p>
+        </div>
+    `.trim();
+
+    await sendEmail({
+        to: userEmail,
+        subject,
+        text,
+        html,
+    });
+}
+
+export { sendWelcomeEmail, sendLoginAlertEmail, OtpEmail, checkEmailConnection }
