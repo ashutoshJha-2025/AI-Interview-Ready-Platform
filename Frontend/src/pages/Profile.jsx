@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import ProfileCard from "../components/ProfileCard.jsx";
-import { Plus, MailWarning } from "lucide-react";
+import { Plus, Home } from "lucide-react";
 import axios from 'axios';
 import { showSuccess, showError } from '../components/ToastMessageBox.jsx'
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,6 @@ const Profile = () => {
         try {
             const response = await axios.get(`http://localhost:3000/api/profile/get-me`, { withCredentials: true })
             setData(response?.data)
-            console.log(response?.data)
         } catch (error) {
             console.log(error.response?.data?.message || error.response?.data?.errors[0]?.msg || error.message || 'Invalid credentials')
         }
@@ -29,6 +28,8 @@ const Profile = () => {
             const response = await axios.post(`http://localhost:3000/api/auth-user/logout`, {}, { withCredentials: true })
             showSuccess('Logged out successfully')
             navigate('/')
+            localStorage.removeItem('isAuth');
+            window.dispatchEvent(new Event('auth-change'));
         } catch (error) {
             showError(error.response?.data?.message || error.response?.data?.errors[0]?.msg || error.message || 'Unauthorized user, login / register to continue !')
         }
@@ -51,9 +52,9 @@ const Profile = () => {
                     Profile updated at: <span className="text-[#292524] font-semibold">{date}</span>
                 </span>
 
-                <div className={`flex items-center gap-2 border border-gray-200 rounded-full px-2.5 py-1.5 ${data?.userInfo?.isVerified === true ? 'hidden' : ''}`}>
-                    <MailWarning size={20} className="text-[#C9A24B] shrink-0" />
-                    <Link to="/email-verifiied" className="text-sm font-semibold text-[#292524]">Verify your email</Link>
+                <div className={`flex items-center gap-2 border border-gray-300 rounded-full px-3 py-2`}>
+                    <Home size={20} className="text-[#C9A24B] shrink-0" />
+                    <Link to="/home" className="text-sm font-semibold text-[#292524]">Home</Link>
                 </div>
 
                 <button

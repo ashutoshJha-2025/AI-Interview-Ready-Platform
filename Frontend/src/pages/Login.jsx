@@ -28,6 +28,8 @@ const Login = () => {
                 navigate('/profile')
                 setFormData({ email: '', password: '' })
             }, 1000)
+            localStorage.setItem('isAuth', 'true');
+            window.dispatchEvent(new Event('auth-change'));
         } catch (error) {
             showError(error.response?.data?.message || error.response?.data?.errors?.[0]?.msg || error.message || 'Invalid credentials')
         } finally {

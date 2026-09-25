@@ -1,5 +1,6 @@
 import { User } from "../models/user.model.js";
-import { sendWelcomeEmail, sendLoginAlertEmail } from '../services/email.service.js'
+import { sendWelcomeEmail } from '../services/email.service.js'
+import { storeOtp } from "../services/redis.service.js";
 
 async function registerUser(req, res) {
     const { username, email, password } = req.body;
@@ -26,8 +27,11 @@ async function registerUser(req, res) {
     const user = await User.create({ username, email, password });
     const refreshToken = await user.generateRefreshToken()
 
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    await storeOtp(user._id.toString(), otp);
+
     try {
-        await sendWelcomeEmail(user.email, user.username);
+        await sendWelcomeEmail(user.email, user.username, otp);
     } catch (error) {
         console.error(error)
     }
@@ -84,13 +88,6 @@ async function loginUser(req, res) {
     };
 
     res.cookie('refreshToken', refreshToken, cookieOptions);
-
-    try {
-        await sendLoginAlertEmail(user.email, user.username, new Date().toLocaleString());
-    } catch (error) {
-        console.error('[Mail] failed to send login alert:', error?.message || error);
-    }
-
     return res.status(200).json({
         message: 'User logged in successfully',
         user: {
