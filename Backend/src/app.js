@@ -3,6 +3,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { authRoutes } from './routes/auth.routes.js'
 import { profileRoutes } from './routes/profile.routes.js'
+import { aiRoutes } from './routes/ai.routes.js'
 import morgan from 'morgan'
 
 const app = express()
@@ -15,5 +16,6 @@ app.use(cors({
 }))
 app.use('/api/auth-user', authRoutes)
 app.use('/api/profile', profileRoutes)
+app.use('/api/ai', aiRoutes)
 
 export { app }

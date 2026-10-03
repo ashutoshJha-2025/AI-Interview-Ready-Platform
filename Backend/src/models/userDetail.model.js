@@ -34,7 +34,7 @@ const userDetailSchema = new mongoose.Schema({
         trim: true,
     },
     averageScore: {
-        type: String,
+        type: Number,
         trim:true,
     },
 }, { timestamps: true })

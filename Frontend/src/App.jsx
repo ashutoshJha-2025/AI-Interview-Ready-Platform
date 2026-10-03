@@ -9,6 +9,7 @@ import ProfileUpdate from "./components/ProfileUpdate"
 import Home from "./pages/Home"
 import ProtectedRoute from "./components/ProtectedRoute"
 import NotFound from "./pages/NotFound"
+import Interview from "./pages/Interview"
 
 const App = () => {
   return (
@@ -22,6 +23,8 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/email-verifiied" element={<EmailVerification />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/interview-started" element={<Interview />} />
+
 
         {/* protected routes */}
         <Route element={<ProtectedRoute />}>
