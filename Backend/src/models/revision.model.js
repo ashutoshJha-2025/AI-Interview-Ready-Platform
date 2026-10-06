@@ -13,10 +13,9 @@ const revisionSchema = new mongoose.Schema({
         required: true,
         index: true,
     },
-    questionOrder: {
-        type: Number,
-        required: true,
-        min: 1,
+    jobRole: {
+        type: String,
+        trim: true,
     },
     question: {
         type: String,

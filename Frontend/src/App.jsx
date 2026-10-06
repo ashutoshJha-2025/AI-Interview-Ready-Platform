@@ -12,6 +12,8 @@ import NotFound from "./pages/NotFound"
 import Interview from "./pages/Interview"
 import InterviewAnswers from "./pages/InterviewAnswers"
 import Revision from "./pages/Revision"
+import History from "./pages/History"
+import InterviewResult from "./pages/InterviewResult"
 
 const App = () => {
   return (
@@ -29,8 +31,10 @@ const App = () => {
         <Route path="/profile/edit-details" element={<ProfileUpdate />} />
         <Route path="/home" element={<Home />} />
         <Route path="/interview-answer" element={<InterviewAnswers />} />
+        <Route path="/history" element={<History />} />
         <Route path="/revision" element={<Revision />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/interview-result/:interviewId" element={<InterviewResult />} />
 
         {/* protected routes */}
         {/* // <Route element={<ProtectedRoute />}>

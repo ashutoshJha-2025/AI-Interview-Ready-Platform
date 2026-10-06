@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { generateInterviewQuestions, evaluateInterviewAnswers } from '../services/ai.service.js';
 import { Interview } from '../models/interview.model.js';
 import { Revision } from '../models/revision.model.js';
@@ -171,7 +172,7 @@ async function bookmarkQuestion(req, res) {
             {
                 userId,
                 interviewId,
-                questionOrder: Number(questionOrder),
+                jobRole: interview.jobRole,
                 question: question.question,
                 userAnswer: question.userAnswer || '',
                 idealAnswer: question.idealAnswer || '',
@@ -215,4 +216,118 @@ async function getRevisionList(req, res) {
     }
 }
 
-export { createInterview, submitUserAnswers, evaluateInterview, bookmarkQuestion, getRevisionList };
+async function getAllInterview(req, res) {
+    const userId = req.user?._id;
+
+    if (!userId) {
+        return res.status(401).json({ message: 'Unauthorized request' });
+    }
+
+    try {
+        const interviews = await Interview.find({ userId, isDeleted: false })
+            .sort({ createdAt: -1, _id: -1 });
+
+        return res.status(200).json({
+            message: 'Interview history fetched successfully',
+            interviews,
+        });
+    } catch (error) {
+        console.error('Error fetching interview history:', error);
+        return res.status(500).json({
+            message: 'Error fetching interview history',
+            error: error?.message || 'Unexpected error',
+        });
+    }
+}
+
+async function getHomeDashboard(req, res) {
+    const userId = req.user?._id;
+
+    if (!userId) {
+        return res.status(401).json({ message: 'Unauthorized request' });
+    }
+
+    try {
+        const interviewFilter = { userId, isDeleted: { $ne: true } };
+        const [stats, recentInterviews, flashcardCount] = await Promise.all([
+            Interview.aggregate([
+                { $match: interviewFilter },
+                {
+                    $group: {
+                        _id: null,
+                        interviewCount: { $sum: 1 },
+                        averageScore: {
+                            $avg: {
+                                $cond: [
+                                    { $eq: ['$status', 'completed'] },
+                                    '$overallScore',
+                                    null,
+                                ],
+                            },
+                        },
+                    },
+                },
+            ]),
+            Interview.find(interviewFilter)
+                .select('jobRole status overallScore numberOfQuestions createdAt')
+                .sort({ createdAt: -1, _id: -1 })
+                .limit(3)
+                .lean(),
+            Revision.countDocuments({ userId }),
+        ]);
+
+        return res.status(200).json({
+            message: 'Home dashboard fetched successfully',
+            stats: {
+                interviewCount: stats[0]?.interviewCount ?? 0,
+                averageScore: Math.round(stats[0]?.averageScore ?? 0),
+                flashcardCount,
+            },
+            recentInterviews,
+        });
+    } catch (error) {
+        console.error('Error fetching home dashboard:', error);
+        return res.status(500).json({
+            message: 'Error fetching home dashboard',
+            error: error?.message || 'Unexpected error',
+        });
+    }
+}
+
+async function getInterviewResult(req, res) {
+    const userId = req.user?._id;
+    const { interviewId } = req.params;
+
+    if (!userId) {
+        return res.status(401).json({ message: 'Unauthorized request' });
+    }
+
+    if (!mongoose.isValidObjectId(interviewId)) {
+        return res.status(400).json({ message: 'Valid interview id is required' });
+    }
+
+    try {
+        const interview = await Interview.findOne({
+            _id: interviewId,
+            userId,
+            isDeleted: { $ne: true },
+        }).select('jobRole status overallScore strengths improvements questions createdAt');
+
+        if (!interview) {
+            return res.status(404).json({ message: 'Interview result not found' });
+        }
+
+        return res.status(200).json({
+            message: 'Interview result fetched successfully',
+            interview,
+        });
+    } catch (error) {
+        console.error('Error fetching interview result:', error);
+        return res.status(500).json({
+            message: 'Error fetching interview result',
+            error: error?.message || 'Unexpected error',
+        });
+    }
+}
+
+export { createInterview, submitUserAnswers, evaluateInterview, bookmarkQuestion, getRevisionList, getAllInterview, getHomeDashboard, getInterviewResult };
