@@ -10,6 +10,8 @@ import Home from "./pages/Home"
 import ProtectedRoute from "./components/ProtectedRoute"
 import NotFound from "./pages/NotFound"
 import Interview from "./pages/Interview"
+import InterviewAnswers from "./pages/InterviewAnswers"
+import Revision from "./pages/Revision"
 
 const App = () => {
   return (
@@ -22,16 +24,18 @@ const App = () => {
         <Route path="/login" element={<LogIn />} />
         <Route path="/register" element={<Register />} />
         <Route path="/email-verifiied" element={<EmailVerification />} />
-        <Route path="*" element={<NotFound />} />
         <Route path="/interview-started" element={<Interview />} />
-
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/edit-details" element={<ProfileUpdate />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/interview-answer" element={<InterviewAnswers />} />
+        <Route path="/revision" element={<Revision />} />
+        <Route path="*" element={<NotFound />} />
 
         {/* protected routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/edit-details" element={<ProfileUpdate />} />
-          <Route path="/home" element={<Home />} />
-        </Route>
+        {/* // <Route element={<ProtectedRoute />}>
+
+        // </Route> */}
 
       </Routes>
     </>

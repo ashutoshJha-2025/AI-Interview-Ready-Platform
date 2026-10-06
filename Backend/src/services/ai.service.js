@@ -31,8 +31,37 @@ const interviewQuestionsJsonSchema = {
     required: ["questions"]
 };
 
+const evaluationJsonSchema = {
+    type: "object",
+    properties: {
+        strengths: {
+            type: "array",
+            description: "Key strengths shown by the candidate across the answers.",
+            items: {
+                type: "string"
+            }
+        },
+        improvements: {
+            type: "array",
+            description: "Specific improvements or gaps to focus on for the candidate.",
+            items: {
+                type: "string"
+            }
+        },
+        overallScore: {
+            type: "number",
+            description: "Overall score from 0 to 100 based on the quality of the answers."
+        }
+    },
+    required: ["strengths", "improvements", "overallScore"]
+};
+
 const interviewQuestionsSchema = z.fromJSONSchema(
     interviewQuestionsJsonSchema
+);
+
+const interviewEvaluationSchema = z.fromJSONSchema(
+    evaluationJsonSchema
 );
 
 async function generateInterviewQuestions(jobRole, difficulty, numberOfQuestions, experienceLevel, description) {
@@ -103,4 +132,60 @@ async function generateInterviewQuestions(jobRole, difficulty, numberOfQuestions
     }));
 }
 
-export { generateInterviewQuestions };
+async function evaluateInterviewAnswers(questions = []) {
+    if (!Array.isArray(questions) || questions.length === 0) {
+        throw new Error("At least one question answer is required for evaluation");
+    }
+
+    const normalizedQuestions = questions.map(({ question, idealAnswer, userAnswer, order }) => ({
+        order,
+        question,
+        idealAnswer,
+        userAnswer: userAnswer ?? ""
+    }));
+
+    const prompt = `
+        You are an expert interview evaluator.
+        Compare the candidate answer against the ideal answer for each question.
+        Evaluate the quality of the responses across clarity, depth, relevance, structure, and confidence.
+
+        Questions:
+        ${JSON.stringify(normalizedQuestions, null, 2)}
+
+        Instructions:
+        1. Return a JSON object with three keys: strengths, improvements, overallScore.
+        2. strengths must be an array of 3-5 concise bullet-like statements about the candidate's strengths.
+        3. improvements must be an array of 3-5 concise suggestions to improve.
+        4. overallScore must be a number between 0 and 100.
+        5. Keep the analysis realistic and based on the actual answers.
+        6. Return only valid JSON and no extra text.
+    `;
+
+    const interaction = await ai.interactions.create({
+        model: "gemini-3.5-flash-lite",
+        input: prompt,
+        response_format: {
+            type: "text",
+            mime_type: "application/json",
+            schema: evaluationJsonSchema
+        }
+    });
+
+    const output = interviewEvaluationSchema.parse(
+        JSON.parse(interaction.output_text)
+    );
+
+    const strengths = Array.isArray(output.strengths) ? output.strengths : [];
+    const improvements = Array.isArray(output.improvements) ? output.improvements : [];
+    const overallScore = Number.isFinite(output.overallScore)
+        ? Math.min(100, Math.max(0, Math.round(output.overallScore)))
+        : 0;
+
+    return {
+        strengths,
+        improvements,
+        overallScore,
+    };
+}
+
+export { generateInterviewQuestions, evaluateInterviewAnswers };

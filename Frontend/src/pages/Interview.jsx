@@ -1,27 +1,60 @@
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react';
+import axios from 'axios'
 import { CheckCircle2 } from 'lucide-react'
+import { showError, showSuccess } from '../components/ToastMessageBox.jsx'
 
 const Interview = () => {
     const location = useLocation();
-    const result = location.state.result;
-    const role = location.state.role;
+    const navigate = useNavigate()
+    const result = location.state?.result ?? {};
+    const role = location.state?.role || 'Interview';
+    const interviewId = result?.interviewId || location.state?.interviewId || result?._id;
 
     const [answers, setAnswers] = useState({});
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (id, value) => {
         setAnswers((prev) => ({ ...prev, [id]: value }));
     };
 
     const answeredCount = result?.questions?.filter((question) => answers[question.order]?.trim()).length ?? 0;
-    const allAnswered = answeredCount === result?.questions?.length;
-    const remaining = result?.questions?.length - answeredCount;
+    const allAnswered = (result?.questions?.length ?? 0) > 0 && answeredCount === result?.questions?.length;
+    const remaining = (result?.questions?.length ?? 0) - answeredCount;
 
-    async function hanldeSubmit() {
-        setLoading(true)
-        console.log(answers)
-        setLoading(false)
+    async function handleSubmit() {
+        if (!result?.questions?.length) {
+            showError('No questions available to submit.');
+            return;
+        }
+
+        const questions = result.questions.map((question) => ({
+            ...question,
+            userAnswer: answers[question.order] ?? '',
+        }));
+
+        try {
+            setLoading(true)
+            const response = await axios.patch(
+                'http://localhost:3000/api/ai/userAnswer',
+                { interviewId, questions },
+                { withCredentials: true }
+            )
+
+            showSuccess(response?.data?.message || 'Answers saved successfully')
+            navigate('/interview-answer', {
+                state: {
+                    interviewId,
+                    formData: {
+                        data: questions,
+                    },
+                }
+            })
+        } catch (error) {
+            showError(error.response?.data?.message || error.message || 'Could not save answers')
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -42,11 +75,11 @@ const Interview = () => {
                                 <div className="flex-1 h-1.5 bg-[#EDE6D4] rounded-full overflow-hidden">
                                     <div
                                         className="h-full bg-[#C9A24B] transition-all duration-300"
-                                        style={{ width: `${(answeredCount / result?.questions?.length) * 100}%` }}
+                                        style={{ width: `${((result?.questions?.length ?? 0) === 0) ? 0 : (answeredCount / (result.questions.length)) * 100}%` }}
                                     />
                                 </div>
                                 <span className="text-xs font-medium text-[#78716C] whitespace-nowrap">
-                                    {answeredCount} / {result?.questions?.length} answered
+                                    {answeredCount} / {result?.questions?.length ?? 0} answered
                                 </span>
                             </div>
                         </div>
@@ -97,11 +130,11 @@ const Interview = () => {
                         </p>
                         <button
                             type="submit"
-                            onClick={() => hanldeSubmit()}
-                            disabled={loading}
+                            onClick={handleSubmit}
+                            disabled={loading || !allAnswered}
                             className="shrink-0 rounded-xl bg-[#0B4D3B] px-6 py-3 text-sm font-semibold text-[#F8E7C9] hover:bg-[#073C2E] disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
                         >
-                            {loading ? 'Submitting Answers' : 'Submit Interview'}
+                            {loading ? 'Saving...' : 'Submit Answers'}
                         </button>
                     </div>
                 </form>
