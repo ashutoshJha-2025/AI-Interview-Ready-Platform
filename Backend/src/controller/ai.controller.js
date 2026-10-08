@@ -172,6 +172,7 @@ async function bookmarkQuestion(req, res) {
             {
                 userId,
                 interviewId,
+                questionOrder: Number(questionOrder),
                 jobRole: interview.jobRole,
                 question: question.question,
                 userAnswer: question.userAnswer || '',

@@ -132,7 +132,7 @@ const History = () => {
                         </p>
                     </div>
                 ) : (
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div className="grid gap-4 md:grid-cols-2 max-[400px]:grid-cols-1">
                         {filteredInterviews.map((interview) => {
                             const completed = interview.status === "completed";
 

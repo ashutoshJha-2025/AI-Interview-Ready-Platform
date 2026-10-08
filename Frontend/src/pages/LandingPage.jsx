@@ -39,12 +39,12 @@ const LandingPage = () => {
     return (
         <div className="w-full min-h-screen bg-[#FAF6EF]">
 
-            <nav className="w-full sticky top-0 z-30 backdrop-blur-md bg-white/90 border-b border-[#EDE6D4] px-6 md:px-12 py-4 flex items-center justify-between">
-                <span className="text-xl font-bold text-[#073C2E]">
+            <nav className="w-full sticky top-0 z-30 backdrop-blur-md bg-white/90 border-b border-[#EDE6D4] px-6 md:px-12 py-4 flex items-center justify-between max-sm:justify-center">
+                <span className="text-xl font-bold text-[#073C2E] max-[400px]:text-2xl">
                     Interview<span className="text-[#C9A24B]">Ready</span>
                 </span>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 max-sm:hidden">
                     <Link
                         to="/login"
                         className="px-4 py-2 rounded-xl text-sm font-medium text-[#0B4D3B] border border-[#0B4D3B] hover:bg-[#0B4D3B] hover:text-[#F8E7C9] transition-colors"
@@ -60,7 +60,7 @@ const LandingPage = () => {
                 </div>
             </nav>
 
-            <section className="w-full flex flex-col lg:flex-row items-center gap-15 px-6 md:px-12 py-14 lg:py-10">
+            <section className="w-full flex flex-col lg:flex-row items-center gap-15 px-6 md:px-12 py-5">
                 <div className="flex-1 max-w-xl">
                     <h1 className="text-3xl md:text-4xl font-bold text-[#292524] leading-tight mb-4">
                         Ace every interview with AI on your side

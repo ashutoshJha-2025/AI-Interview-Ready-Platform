@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import ProfileCard from "../components/ProfileCard.jsx";
 import { Plus, Home } from "lucide-react";
 import axios from 'axios';
-import { showSuccess, showError } from '../components/ToastMessageBox.jsx'
+import { showSuccess, showError, showInfo } from '../components/ToastMessageBox.jsx'
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
@@ -48,27 +48,27 @@ const Profile = () => {
 
             {/* Header */}
             <div className="w-full sticky top-0 z-30 backdrop-blur-md bg-white/90 border-b border-[#EDE6D4] px-6 md:px-12 py-3.5 shadow-sm flex items-center justify-between">
-                <span className="text-[#57534E] font-medium text-sm">
+                <span className="text-[#57534E] font-medium text-sm max-sm:hidden">
                     Profile updated at: <span className="text-[#292524] font-semibold">{date}</span>
                 </span>
 
                 <Link
                     to="/dashboard"
-                    className="flex items-center gap-2.5 px-3 py-2 text-sm text-[#292524] transition-colors border border-gray-300 rounded-full">
+                    className="flex items-center gap-2.5 px-3 py-2 text-sm text-[#292524] transition-colors border border-gray-300 rounded-full max-[400px]:text-xs max-[400px]:px- ">
                     <Home size={20} className="text-[#C9A24B]" />
                     Home
                 </Link>
 
 
-                <div className="flex gap-5">
+                <div className="flex gap-5 max-[400px]:gap-2">
                     <button
                         onClick={() => logout()}
-                        className="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors">
+                        className="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors max-[400px]:text-xs max-[400px]:px-2">
                         Sign Out
                     </button>
                     <button
-                        onClick={() => logout()}
-                        className="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium text-yellow-600 bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 transition-colors">
+                        onClick={() => showInfo('Delete account is not available at the moment.')}
+                        className="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium text-yellow-600 bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 transition-colors max-[400px]:text-xs max-[400px]:px-2">
                         Delete Account
                     </button>
                 </div>

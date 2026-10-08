@@ -54,13 +54,13 @@ const CreateInterview = () => {
 
     return (
         <>
-            <div className="bg-white border border-[#EDE6D4] rounded-3xl shadow-sm p-6 md:p-7">
+            <div className="min-w-0 rounded-3xl border border-[#EDE6D4] bg-white p-6 shadow-sm md:p-7 max-[500px]:p-4 max-[350px]:rounded-2xl max-[350px]:p-3">
                 <h2 className="text-base font-semibold text-[#292524] mb-1">Start a new interview</h2>
                 <p className="text-xs text-[#78716C] mb-6">
                     Pick a role and we'll generate questions tailored to it.
                 </p>
 
-                <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
+                <form onSubmit={(e) => e.preventDefault()} className="space-y-5 max-[350px]:space-y-4">
 
                     <div>
                         <label htmlFor="jobRole" className="block text-sm font-medium text-[#57534E] mb-1.5">

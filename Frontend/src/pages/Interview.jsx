@@ -131,7 +131,6 @@ const Interview = () => {
                         <button
                             type="submit"
                             onClick={handleSubmit}
-                            disabled={loading || !allAnswered}
                             className="shrink-0 rounded-xl bg-[#0B4D3B] px-6 py-3 text-sm font-semibold text-[#F8E7C9] hover:bg-[#073C2E] disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
                         >
                             {loading ? 'Saving...' : 'Submit Answers'}

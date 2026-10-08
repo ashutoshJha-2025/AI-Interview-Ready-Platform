@@ -60,7 +60,7 @@ const InterviewAnswers = () => {
 
     return (
         <>
-            <div className="min-h-screen w-full bg-[#FAF6EF] px-4 py-8 md:px-8">
+            <div className="min-h-screen w-full bg-[#FAF6EF] px-4 py-8 max-sm:px-3 max-[350px]:px-2 md:px-8">
                 <div className="mx-auto max-w-6xl space-y-6">
                     <div className="rounded-3xl border border-[#EDE6D4] bg-white p-5 shadow-sm">
                         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -119,8 +119,8 @@ const InterviewAnswers = () => {
                     )}
 
                     <div className="w-full overflow-hidden rounded-3xl border border-[#EDE6D4] bg-white shadow-sm">
-                        <table className="w-full border-collapse">
-                            <thead className="bg-[#1E1B1B] text-white">
+                        <table className="w-full border-collapse max-md:block">
+                            <thead className="bg-[#1E1B1B] text-white max-md:hidden">
                                 <tr>
                                     <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Questions</th>
                                     <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Your Answer</th>
@@ -129,26 +129,35 @@ const InterviewAnswers = () => {
                                 </tr>
                             </thead>
 
-                            <tbody className="divide-y divide-gray-200">
+                            <tbody className="divide-y divide-gray-200 max-md:block max-md:divide-y-0">
                                 {data.map((question, index) => (
-                                    <tr key={question.order ?? index} className="align-top text-sm text-[#292524]">
-                                        <td className="px-6 py-5 font-medium text-gray-800 align-top">
+                                    <tr key={question.order ?? index} className="align-top text-sm text-[#292524] max-md:mb-4 max-md:block max-md:overflow-hidden max-md:rounded-2xl max-md:border max-md:border-[#EDE6D4] max-md:bg-[#FFFDF9] max-md:shadow-sm max-md:last:mb-0">
+                                        <td className="px-6 py-5 font-medium text-gray-800 align-top max-md:block max-md:px-4 max-md:py-4 max-sm:px-3 max-[450px]:py-3 max-[350px]:px-2">
+                                            <span className="mb-2 hidden text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6F685F] max-md:block">
+                                                Question {question.order ?? index + 1}
+                                            </span>
                                             {question.question}
                                         </td>
 
-                                        <td className="px-6 py-5 text-gray-600 align-top whitespace-pre-wrap">
+                                        <td className="px-6 py-5 text-gray-600 align-top whitespace-pre-wrap break-words max-md:block max-md:border-t max-md:border-[#EDE6D4] max-md:px-4 max-md:py-4 max-sm:px-3 max-[450px]:py-3 max-[350px]:px-2">
+                                            <span className="mb-2 hidden text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6F685F] max-md:block">
+                                                Your answer
+                                            </span>
                                             {question.userAnswer || 'No answer provided'}
                                         </td>
 
-                                        <td className="px-6 py-5 text-gray-600 align-top whitespace-pre-wrap">
-                                            {question.idealAnswer}
+                                        <td className="px-6 py-5 text-gray-600 align-top whitespace-pre-wrap break-words max-md:block max-md:border-t max-md:border-[#EDE6D4] max-md:px-4 max-md:py-4 max-sm:px-3 max-[450px]:py-3 max-[350px]:px-2">
+                                            <span className="mb-2 hidden text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6F685F] max-md:block">
+                                                Ideal answer
+                                            </span>
+                                            {question.idealAnswer || 'No ideal answer provided'}
                                         </td>
 
-                                        <td className="px-6 py-5 align-top">
+                                        <td className="px-6 py-5 align-top max-md:block max-md:border-t max-md:border-[#EDE6D4] max-md:px-4 max-md:py-3 max-sm:px-3 max-[350px]:px-2">
                                             <button
                                                 type="button"
                                                 onClick={() => handleBookmark(question)}
-                                                className="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-[#E9DFC7] bg-[#FAF6EF] px-3 py-2 text-xs font-medium text-[#0F5F4A] hover:bg-[#F4EBDD]"
+                                                className="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-[#E9DFC7] bg-[#FAF6EF] px-3 py-2 text-xs font-medium text-[#0F5F4A] hover:bg-[#F4EBDD] max-md:w-full max-md:justify-center max-[350px]:px-2"
                                             >
                                                 <BookMarked size={14} />
                                                 Save
