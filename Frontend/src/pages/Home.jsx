@@ -86,7 +86,7 @@ const Home = () => {
                                     <button
                                         type="button"
                                         key={interview._id}
-                                        onClick={() => navigate(`/interview-result/${interview._id}`)}
+                                        onClick={() => navigate(`/interview/result/${interview._id}`)}
                                         className="group rounded-3xl border border-[#E9DFC7] bg-linear-to-br from-[#FFFDF9] to-[#F4EBDD] px-5 py-4 text-left shadow-[0_8px_22px_rgba(146,118,72,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_14px_28px_rgba(146,118,72,0.12)]"
                                     >
                                         <span className="block truncate text-[1.05rem] font-semibold text-[#292524]">
@@ -118,7 +118,7 @@ const Home = () => {
                             </h2>
                             <button
                                 type="button"
-                                onClick={() => navigate("/revision")}
+                                onClick={() => navigate("/interview/review")}
                                 className="flex w-full items-center gap-3 rounded-3xl border border-dashed border-[#E5C980] bg-linear-to-r from-[#FDF8EE] to-[#F5EAD3] px-5 py-5 text-left transition-all duration-200 hover:border-[#C9A24B] hover:shadow-[0_10px_22px_rgba(185,139,58,0.12)]"
                             >
                                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#E7CE8F] bg-white shadow-sm">

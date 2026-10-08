@@ -37,9 +37,8 @@ const CreateInterview = () => {
                 formData,
                 { withCredentials: true }
             );
-            console.log(result)
             showSuccess(result?.data?.message || "Interview created");
-            navigate('/interview-started', {
+            navigate('/interview/start', {
                 state: {
                     result: result.data,
                     role: formData.jobRole

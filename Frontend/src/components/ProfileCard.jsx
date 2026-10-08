@@ -1,7 +1,7 @@
 import userIconAnimation from '../assets/wired-lineal-21-avatar-hover-looking-around.json'
 import { useRef, useEffect } from 'react';
 import { Lottie } from "lottie-react";
-import { Mail, MapPin, Star, Pencil, ShieldCheck } from "lucide-react";
+import { Mail, MapPin, Pencil, ShieldCheck } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
 const ProfileCard = ({ data = {} }) => {
@@ -61,14 +61,10 @@ const ProfileCard = ({ data = {} }) => {
                         <Mail size={16} className="text-[#C9A24B]" />
                         <span className="truncate">{data?.userInfo?.email || 'Not set'}</span>
                     </div>
-                    <div className="flex items-center gap-2.5">
-                        <Star size={16} className="text-[#C9A24B]" />
-                        <span>Avg. Score: {data?.profileDetails?.averageScore || 0}</span>
-                    </div>
                 </div>
 
                 <button
-                    onClick={() => navigate('/profile/edit-details')}
+                    onClick={() => navigate('/profile/edit')}
                     type="button"
                     className="w-full flex items-center justify-center gap-2 text-[#073C2E] bg-[#C9A24B] text-sm font-semibold rounded-xl px-6 py-2.5 cursor-pointer transition-all hover:bg-[#E0BB63] hover:-translate-y-0.5"
                 >

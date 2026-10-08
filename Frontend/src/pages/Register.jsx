@@ -44,7 +44,7 @@ const Register = () => {
             showSuccess(result.data.message)
             localStorage.setItem('email', formData.email)
             setTimeout(() => {
-                navigate('/email-verifiied')
+                navigate('/verify-email')
                 showInfo('Verify your email to get started.');
                 setFormData({ username: '', email: '', password: '', confirmPassword: '' })
             }, 1000)

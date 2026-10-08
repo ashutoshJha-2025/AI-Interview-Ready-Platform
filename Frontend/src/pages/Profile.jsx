@@ -52,16 +52,26 @@ const Profile = () => {
                     Profile updated at: <span className="text-[#292524] font-semibold">{date}</span>
                 </span>
 
-                <div className={`flex items-center gap-2 border border-gray-300 rounded-full px-3 py-2`}>
-                    <Home size={20} className="text-[#C9A24B] shrink-0" />
-                    <Link to="/home" className="text-sm font-semibold text-[#292524]">Home</Link>
-                </div>
+                <Link
+                    to="/dashboard"
+                    className="flex items-center gap-2.5 px-3 py-2 text-sm text-[#292524] transition-colors border border-gray-300 rounded-full">
+                    <Home size={20} className="text-[#C9A24B]" />
+                    Home
+                </Link>
 
-                <button
-                    onClick={() => logout()}
-                    className="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors">
-                    Sign Out
-                </button>
+
+                <div className="flex gap-5">
+                    <button
+                        onClick={() => logout()}
+                        className="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors">
+                        Sign Out
+                    </button>
+                    <button
+                        onClick={() => logout()}
+                        className="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium text-yellow-600 bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 transition-colors">
+                        Delete Account
+                    </button>
+                </div>
             </div>
 
             {/* Main content */}
@@ -125,23 +135,17 @@ const Profile = () => {
                     {/* Previous Interviews */}
                     <div>
                         <h2 className="text-xs font-bold text-[#78716C] uppercase tracking-widest mb-3">
-                            Previous Interviews
+                            Start Interview
                         </h2>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                            {/* <button className="bg-white rounded-2xl border border-[#EDE6D4] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 px-4 py-5 text-center cursor-pointer">
-                                <p className="text-sm font-semibold text-[#292524]">Reactjs</p>
-                                <p className="text-xs text-[#A8A29E] mt-1">Score: 9.2</p>
-                            </button>
-                            <button className="bg-white rounded-2xl border border-[#EDE6D4] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 px-4 py-5 text-center cursor-pointer">
-                                <p className="text-sm font-semibold text-[#292524]">Java</p>
-                                <p className="text-xs text-[#A8A29E] mt-1">Score: 9.8</p>
-                            </button> */}
-                            <button className="bg-[#FBF6E9] rounded-2xl border border-dashed border-[#E7CE8F] hover:border-[#C9A24B] hover:-translate-y-0.5 transition-all duration-200 px-4 py-5 flex flex-col items-center justify-center gap-1.5 cursor-pointer">
+                            <Link
+                                to='/dashboard'
+                                className="bg-[#FBF6E9] rounded-2xl border border-dashed border-[#E7CE8F] hover:border-[#C9A24B] hover:-translate-y-0.5 transition-all duration-200 px-4 py-5 flex flex-col items-center justify-center gap-1.5 cursor-pointer">
                                 <span className="w-7 h-7 rounded-full border border-[#C9A24B] flex items-center justify-center">
                                     <Plus size={14} className="text-[#C9A24B]" />
                                 </span>
                                 <p className="text-xs font-medium text-[#8A6A2C]">Create New</p>
-                            </button>
+                            </Link>
                         </div>
                     </div>
 

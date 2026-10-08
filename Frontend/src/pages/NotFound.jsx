@@ -20,7 +20,7 @@ const NotFound = () => {
 
                 <div className="flex items-center justify-center gap-3">
                     <Link
-                        to={back === 'true' ? '/home' : '/'}
+                        to={back === 'true' ? '/dashboard' : '/'}
                         className="flex items-center gap-2 bg-[#0B4D3B] text-[#F8E7C9] text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors hover:bg-[#073C2E]"
                     >
                         <Home size={16} />

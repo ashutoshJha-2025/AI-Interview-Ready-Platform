@@ -72,7 +72,7 @@ const InterviewAnswers = () => {
                             {displayHome == true ? (
                                 <>
                                     <Link
-                                        to='/home'
+                                        to='/dashboard'
                                         className="cursor-pointer inline-flex items-center justify-center rounded-xl bg-[#0B4D3B] px-5 py-3 text-sm font-semibold text-[#F8E7C9] hover:bg-[#073C2E] disabled:opacity-50"
                                     >
                                         <Home size={16} className="mr-2" />

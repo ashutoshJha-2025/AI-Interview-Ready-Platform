@@ -42,7 +42,7 @@ const Interview = () => {
             )
 
             showSuccess(response?.data?.message || 'Answers saved successfully')
-            navigate('/interview-answer', {
+            navigate('/interview/answers', {
                 state: {
                     interviewId,
                     formData: {

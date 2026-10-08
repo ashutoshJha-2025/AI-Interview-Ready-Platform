@@ -1,3 +1,2 @@
-# First delete all data from db and start from scratch 
-
-## Protected Routes
+## 1. Responsive
+## 2. Deployment

@@ -15,6 +15,21 @@ import Revision from "./pages/Revision"
 import History from "./pages/History"
 import InterviewResult from "./pages/InterviewResult"
 
+const ROUTES = {
+  home: "/dashboard",
+  landing: "/",
+  login: "/login",
+  register: "/register",
+  verifyEmail: "/verify-email",
+  profile: "/profile",
+  profileEdit: "/profile/edit",
+  interviewStart: "/interview/start",
+  interviewAnswers: "/interview/answers",
+  interviewHistory: "/interview/history",
+  interviewReview: "/interview/review",
+  interviewResult: "/interview/result/:interviewId",
+}
+
 const App = () => {
   return (
     <>
@@ -22,24 +37,23 @@ const App = () => {
       <Routes>
 
         {/* public routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LogIn />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/email-verifiied" element={<EmailVerification />} />
-        <Route path="/interview-started" element={<Interview />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/profile/edit-details" element={<ProfileUpdate />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/interview-answer" element={<InterviewAnswers />} />
-        <Route path="/history" element={<History />} />
-        <Route path="/revision" element={<Revision />} />
+        <Route path={ROUTES.landing} element={<LandingPage />} />
+        <Route path={ROUTES.login} element={<LogIn />} />
+        <Route path={ROUTES.register} element={<Register />} />
+        <Route path={ROUTES.verifyEmail} element={<EmailVerification />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/interview-result/:interviewId" element={<InterviewResult />} />
 
         {/* protected routes */}
-        {/* // <Route element={<ProtectedRoute />}>
-
-        // </Route> */}
+        <Route element={<ProtectedRoute />}>
+          <Route path={ROUTES.interviewStart} element={<Interview />} />
+          <Route path={ROUTES.profile} element={<Profile />} />
+          <Route path={ROUTES.profileEdit} element={<ProfileUpdate />} />
+          <Route path={ROUTES.home} element={<Home />} />
+          <Route path={ROUTES.interviewAnswers} element={<InterviewAnswers />} />
+          <Route path={ROUTES.interviewHistory} element={<History />} />
+          <Route path={ROUTES.interviewReview} element={<Revision />} />
+          <Route path={ROUTES.interviewResult} element={<InterviewResult />} />
+        </Route>
 
       </Routes>
     </>

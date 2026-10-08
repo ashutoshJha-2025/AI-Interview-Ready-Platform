@@ -52,7 +52,7 @@ const InterviewResult = () => {
                             </h1>
                         </div>
                         <Link
-                            to="/home"
+                            to="/dashboard"
                             className="inline-flex items-center justify-center rounded-xl bg-[#0B4D3B] px-5 py-3 text-sm font-semibold text-[#F8E7C9] hover:bg-[#073C2E]"
                         >
                             <Home size={16} className="mr-2" />
