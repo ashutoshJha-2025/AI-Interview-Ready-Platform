@@ -22,7 +22,7 @@ const Login = () => {
 
         setLoading(true)
         try {
-            const result = await axios.post(`http://localhost:3000/api/auth-user/login`, formData, { withCredentials: true })
+            const result = await axios.post(`https://ai-interview-ready-platform.onrender.com/api/auth-user/login`, formData, { withCredentials: true })
             showSuccess(result.data.message)
             setTimeout(() => {
                 navigate('/profile')

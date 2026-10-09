@@ -9,7 +9,7 @@ const Revision = () => {
 
     const fetchRevision = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/api/ai/revision', {
+            const response = await axios.get('https://ai-interview-ready-platform.onrender.com/api/ai/revision', {
                 withCredentials: true,
             })
             setRevisionList(response.data?.revision ?? [])

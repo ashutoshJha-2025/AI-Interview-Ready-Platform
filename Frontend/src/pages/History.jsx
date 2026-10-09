@@ -27,7 +27,7 @@ const History = () => {
         setError("");
 
         try {
-            const response = await axios.get("http://localhost:3000/api/ai/getAllInterview", {
+            const response = await axios.get("https://ai-interview-ready-platform.onrender.com/api/ai/getAllInterview", {
                 withCredentials: true,
             });
             setInterviews(response.data?.interviews ?? []);

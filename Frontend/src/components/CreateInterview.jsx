@@ -33,7 +33,7 @@ const CreateInterview = () => {
         setLoading(true);
         try {
             const result = await axios.post(
-                `${'http://localhost:3000/api/ai/create-interview'}`,
+                `${'https://ai-interview-ready-platform.onrender.com/api/ai/create-interview'}`,
                 formData,
                 { withCredentials: true }
             );

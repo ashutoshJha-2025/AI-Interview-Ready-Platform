@@ -40,7 +40,7 @@ const Register = () => {
         setLoading(true)
         try {
             const { confirmPassword, ...payload } = formData
-            const result = await axios.post(`http://localhost:3000/api/auth-user/register`, payload, { withCredentials: true })
+            const result = await axios.post(`https://ai-interview-ready-platform.onrender.com/api/auth-user/register`, payload, { withCredentials: true })
             showSuccess(result.data.message)
             localStorage.setItem('email', formData.email)
             setTimeout(() => {

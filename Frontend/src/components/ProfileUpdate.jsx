@@ -86,7 +86,7 @@ const ProfileUpdate = () => {
             }
 
             const result = await axios.patch(
-                `http://localhost:3000/api/profile/edit-details`,
+                `https://ai-interview-ready-platform.onrender.com/api/profile/edit-details`,
                 formPayload,
                 {
                     withCredentials: true,

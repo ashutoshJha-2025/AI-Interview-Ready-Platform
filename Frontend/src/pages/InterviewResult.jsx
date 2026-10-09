@@ -15,7 +15,7 @@ const InterviewResult = () => {
         const fetchInterviewResult = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3000/api/ai/interview/${interviewId}/result`,
+                    `https://ai-interview-ready-platform.onrender.com/api/ai/interview/${interviewId}/result`,
                     { withCredentials: true }
                 );
                 if (active) {

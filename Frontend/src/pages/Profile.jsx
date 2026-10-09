@@ -25,7 +25,7 @@ const Profile = () => {
 
     async function logout() {
         try {
-            const response = await axios.post(`http://localhost:3000/api/auth-user/logout`, {}, { withCredentials: true })
+            const response = await axios.post(`https://ai-interview-ready-platform.onrender.com/api/auth-user/logout`, {}, { withCredentials: true })
             showSuccess('Logged out successfully')
             navigate('/')
             localStorage.removeItem('isAuth');

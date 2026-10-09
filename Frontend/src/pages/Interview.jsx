@@ -36,7 +36,7 @@ const Interview = () => {
         try {
             setLoading(true)
             const response = await axios.patch(
-                'http://localhost:3000/api/ai/userAnswer',
+                'https://ai-interview-ready-platform.onrender.com/api/ai/userAnswer',
                 { interviewId, questions },
                 { withCredentials: true }
             )

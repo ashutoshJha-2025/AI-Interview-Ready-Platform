@@ -29,7 +29,7 @@ const Home = () => {
     useEffect(() => {
         const fetchDashboard = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/ai/home-dashboard", {
+                const response = await axios.get("https://ai-interview-ready-platform.onrender.com/api/ai/home-dashboard", {
                     withCredentials: true,
                 });
                 setDashboard({

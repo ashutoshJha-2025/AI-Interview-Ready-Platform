@@ -26,7 +26,7 @@ const EmailVerification = () => {
         setSendingOtp(true);
         try {
             const result = await axios.post(
-                `http://localhost:3000/api/auth-user/send-otp`,
+                `https://ai-interview-ready-platform.onrender.com/api/auth-user/send-otp`,
                 {},
                 { withCredentials: true }
             );

@@ -21,7 +21,7 @@ const InterviewAnswers = () => {
         try {
             setLoading(true)
             const response = await axios.post(
-                'http://localhost:3000/api/ai/evaluate',
+                'https://ai-interview-ready-platform.onrender.com/api/ai/evaluate',
                 { interviewId, questions: data },
                 { withCredentials: true }
             )
@@ -48,7 +48,7 @@ const InterviewAnswers = () => {
 
         try {
             const response = await axios.post(
-                'http://localhost:3000/api/ai/bookmark-question',
+                'https://ai-interview-ready-platform.onrender.com/api/ai/bookmark-question',
                 { interviewId, questionOrder: question.order },
                 { withCredentials: true }
             )
