@@ -96,4 +96,4 @@ Whether it's a bug, a UI annoyance, a feature idea, or a suggestion for how the 
 
 **Ashutosh Jha**
 
-- Gmail: [jhaashutosh0811@gmail.com]
+- Gmail: jhaashutosh0811@gmail.com
