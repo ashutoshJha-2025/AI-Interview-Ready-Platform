@@ -1,43 +1,101 @@
 import nodemailer from 'nodemailer'
+import { google } from "googleapis";
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        type: 'OAuth2',
-        user: process.env.GMAIL_USER,
-        clientId: process.env.GMAIL_CLIENT_ID,
-        clientSecret: process.env.GMAIL_CLIENT_SECRET,
-        refreshToken: process.env.GMAIL_REFRESH_TOKEN,
-    },
+// const transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         type: 'OAuth2',
+//         user: process.env.GMAIL_USER,
+//         clientId: process.env.GMAIL_CLIENT_ID,
+//         clientSecret: process.env.GMAIL_CLIENT_SECRET,
+//         refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+//     },
+// });
+
+// const checkEmailConnection = async () => {
+//     try {
+//         await transporter.verify();
+//         console.log('[Nodemailer] Gmail connection is working');
+//         return true;
+//     } catch (error) {
+//         console.error(
+//             '[Nodemailer] Gmail connection failed:',
+//             error?.message || error
+//         );
+//         return false;
+//     }
+// };
+
+// const sendEmail = async ({ to, subject, html, text }) => {
+//     try {
+//         await transporter.sendMail({
+//             from: `"InterviewReady | Get Hired!" <${process.env.GMAIL_USER}>`,
+//             to,
+//             subject,
+//             text,
+//             html,
+//         });
+//         console.log(`Email sent successfully to ${to}`);
+//     } catch (error) {
+//         console.error(`Failed to send email to ${to}\n:`, error?.stack || error);
+//         throw error;
+//     }
+// };
+
+
+const oAuth2Client = new google.auth.OAuth2(
+    process.env.GMAIL_CLIENT_ID,
+    process.env.GMAIL_CLIENT_SECRET,
+    "https://developers.google.com/oauthplayground"
+);
+oAuth2Client.setCredentials({ refresh_token: process.env.GMAIL_REFRESH_TOKEN });
+
+const gmail = google.gmail({ version: "v1", auth: oAuth2Client });
+
+const composer = nodemailer.createTransport({
+    streamTransport: true,
+    buffer: true,
+    newline: "unix",
 });
 
-const checkEmailConnection = async () => {
+const sendEmail = async ({ to, subject, text, html }) => {
     try {
-        await transporter.verify();
-        console.log('[Nodemailer] Gmail connection is working');
-        return true;
-    } catch (error) {
-        console.error(
-            '[Nodemailer] Gmail connection failed:',
-            error?.message || error
-        );
-        return false;
-    }
-};
-
-const sendEmail = async ({ to, subject, html, text }) => {
-    try {
-        await transporter.sendMail({
+        const { message } = await composer.sendMail({
             from: `"InterviewReady | Get Hired!" <${process.env.GMAIL_USER}>`,
             to,
             subject,
             text,
             html,
         });
-        console.log(`Email sent successfully to ${to}`);
+
+        await gmail.users.messages.send({
+            userId: "me",
+            requestBody: { raw: message.toString("base64url") },
+        });
     } catch (error) {
-        console.error(`Failed to send email to ${to}\n:`, error?.stack || error);
+        const reason = error?.response?.data?.error || error?.message || error;
+        console.error(`Failed to send email to ${to}:`, reason);
+
+        if (String(reason).includes("invalid_grant")) {
+            console.error(
+                "Gmail refresh token expired or revoked — regenerate it and update GMAIL_REFRESH_TOKEN."
+            );
+        }
         throw error;
+    }
+};
+
+const checkEmailConnection = async () => {
+    try {
+        await oAuth2Client.getAccessToken();
+        console.log("[Gmail API] Auth is working");
+        return true;
+    } catch (error) {
+        console.error(
+            "[Gmail API] Auth failed:",
+            error?.response?.data?.error || error?.message || error
+        );
+        return false;
     }
 };
 
