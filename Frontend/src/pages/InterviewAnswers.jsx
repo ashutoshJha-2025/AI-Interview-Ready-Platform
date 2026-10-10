@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import axios from 'axios'
+import api from '../api.js'
 import { useState } from 'react'
 import { BookMarked, Sparkles, Home } from 'lucide-react'
 import { showError, showSuccess } from '../components/ToastMessageBox.jsx'
@@ -20,10 +20,9 @@ const InterviewAnswers = () => {
 
         try {
             setLoading(true)
-            const response = await axios.post(
-                'https://ai-interview-ready-platform.onrender.com/api/ai/evaluate',
+            const response = await api.post(
+                '/api/ai/evaluate',
                 { interviewId, questions: data },
-                { withCredentials: true }
             )
 
             setEvaluation({
@@ -47,10 +46,9 @@ const InterviewAnswers = () => {
         }
 
         try {
-            const response = await axios.post(
-                'https://ai-interview-ready-platform.onrender.com/api/ai/bookmark-question',
+            const response = await api.post(
+                '/api/ai/bookmark-question',
                 { interviewId, questionOrder: question.order },
-                { withCredentials: true }
             )
             showSuccess(response?.data?.message || 'Question added to revision list')
         } catch (error) {
@@ -139,14 +137,14 @@ const InterviewAnswers = () => {
                                             {question.question}
                                         </td>
 
-                                        <td className="px-6 py-5 text-gray-600 align-top whitespace-pre-wrap break-words max-md:block max-md:border-t max-md:border-[#EDE6D4] max-md:px-4 max-md:py-4 max-sm:px-3 max-[450px]:py-3 max-[350px]:px-2">
+                                        <td className="px-6 py-5 text-gray-600 align-top whitespace-pre-wrap wrap-break-word max-md:block max-md:border-t max-md:border-[#EDE6D4] max-md:px-4 max-md:py-4 max-sm:px-3 max-[450px]:py-3 max-[350px]:px-2">
                                             <span className="mb-2 hidden text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6F685F] max-md:block">
                                                 Your answer
                                             </span>
                                             {question.userAnswer || 'No answer provided'}
                                         </td>
 
-                                        <td className="px-6 py-5 text-gray-600 align-top whitespace-pre-wrap break-words max-md:block max-md:border-t max-md:border-[#EDE6D4] max-md:px-4 max-md:py-4 max-sm:px-3 max-[450px]:py-3 max-[350px]:px-2">
+                                        <td className="px-6 py-5 text-gray-600 align-top whitespace-pre-wrap wrap-break-word max-md:block max-md:border-t max-md:border-[#EDE6D4] max-md:px-4 max-md:py-4 max-sm:px-3 max-[450px]:py-3 max-[350px]:px-2">
                                             <span className="mb-2 hidden text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6F685F] max-md:block">
                                                 Ideal answer
                                             </span>

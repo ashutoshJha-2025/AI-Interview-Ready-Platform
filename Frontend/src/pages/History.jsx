@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
+import api from "../api.js";
 import { CalendarDays, ClipboardList, RotateCw, Search, Sparkles } from "lucide-react";
 import Navbar from "../components/Navbar.jsx";
 import { showError } from "../components/ToastMessageBox.jsx";
@@ -27,9 +27,7 @@ const History = () => {
         setError("");
 
         try {
-            const response = await axios.get("https://ai-interview-ready-platform.onrender.com/api/ai/getAllInterview", {
-                withCredentials: true,
-            });
+            const response = await api.get("/api/ai/getAllInterview");
             setInterviews(response.data?.interviews ?? []);
         } catch (requestError) {
             const message = requestError.response?.data?.message || requestError.message || "Could not load interview history";
@@ -150,9 +148,8 @@ const History = () => {
                                                 {interview.jobRole || "Interview"}
                                             </h2>
                                         </div>
-                                        <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold capitalize ${
-                                            completed ? "bg-[#E8F3EB] text-[#0B4D3B]" : "bg-[#F4EBDD] text-[#7A5B27]"
-                                        }`}>
+                                        <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold capitalize ${completed ? "bg-[#E8F3EB] text-[#0B4D3B]" : "bg-[#F4EBDD] text-[#7A5B27]"
+                                            }`}>
                                             {String(interview.status || "created").replace("_", " ")}
                                         </span>
                                     </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../api.js";
 import { Home } from "lucide-react";
 import { showError } from "../components/ToastMessageBox.jsx";
 
@@ -14,9 +14,8 @@ const InterviewResult = () => {
 
         const fetchInterviewResult = async () => {
             try {
-                const response = await axios.get(
-                    `https://ai-interview-ready-platform.onrender.com/api/ai/interview/${interviewId}/result`,
-                    { withCredentials: true }
+                const response = await api.get(
+                    `/api/ai/interview/${interviewId}/result`,
                 );
                 if (active) {
                     setInterview(response.data?.interview ?? null);
@@ -97,7 +96,7 @@ const InterviewResult = () => {
                         )}
 
                         <div className="w-full overflow-x-auto rounded-3xl border border-[#EDE6D4] bg-white shadow-sm">
-                            <table className="w-full min-w-[640px] border-collapse">
+                            <table className="w-full min-w-160 border-collapse">
                                 <thead className="bg-[#1E1B1B] text-white">
                                     <tr>
                                         <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Questions</th>

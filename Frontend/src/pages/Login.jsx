@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import api from '../api.js'
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import { showSuccess, showError, showWarning, showInfo } from "../components/ToastMessageBox.jsx";
@@ -22,7 +22,7 @@ const Login = () => {
 
         setLoading(true)
         try {
-            const result = await axios.post(`https://ai-interview-ready-platform.onrender.com/api/auth-user/login`, formData, { withCredentials: true })
+            const result = await api.post('/api/auth-user/login', formData)
             showSuccess(result.data.message)
             setTimeout(() => {
                 navigate('/profile')

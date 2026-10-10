@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api.js";
 import { Briefcase, ChevronDown, FileText } from "lucide-react";
 import { showSuccess, showError, showWarning } from "../components/ToastMessageBox.jsx";
 
@@ -32,10 +32,9 @@ const CreateInterview = () => {
 
         setLoading(true);
         try {
-            const result = await axios.post(
-                `${'https://ai-interview-ready-platform.onrender.com/api/ai/create-interview'}`,
+            const result = await api.post(
+                "/api/ai/create-interview",
                 formData,
-                { withCredentials: true }
             );
             showSuccess(result?.data?.message || "Interview created");
             navigate('/interview/start', {

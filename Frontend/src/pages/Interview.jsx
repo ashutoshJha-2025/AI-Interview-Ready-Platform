@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react';
-import axios from 'axios'
+import api from '../api.js'
 import { CheckCircle2 } from 'lucide-react'
 import { showError, showSuccess } from '../components/ToastMessageBox.jsx'
 
@@ -35,10 +35,9 @@ const Interview = () => {
 
         try {
             setLoading(true)
-            const response = await axios.patch(
-                'https://ai-interview-ready-platform.onrender.com/api/ai/userAnswer',
+            const response = await api.patch(
+                '/api/ai/userAnswer',
                 { interviewId, questions },
-                { withCredentials: true }
             )
 
             showSuccess(response?.data?.message || 'Answers saved successfully')

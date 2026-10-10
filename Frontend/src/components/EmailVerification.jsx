@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api.js";
 import { showSuccess, showError } from "../components/ToastMessageBox.jsx";
 import { Mail, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -25,10 +25,8 @@ const EmailVerification = () => {
     const handleGetOtp = async () => {
         setSendingOtp(true);
         try {
-            const result = await axios.post(
-                `https://ai-interview-ready-platform.onrender.com/api/auth-user/send-otp`,
-                {},
-                { withCredentials: true }
+            const result = await api.post(
+                "/api/auth-user/send-otp",
             );
             showSuccess(result.data.message || "OTP sent to your email");
             setSecondsLeft(RESEND_COOLDOWN_SECONDS);
@@ -46,8 +44,8 @@ const EmailVerification = () => {
         }
         setVerifying(true);
         try {
-            const result = await axios.post(
-                `http://localhost:3000/api/auth-user/verify-otp`,
+            const result = await api.post(
+                "/api/auth-user/verify-otp",
                 { otp },
                 { withCredentials: true }
             );

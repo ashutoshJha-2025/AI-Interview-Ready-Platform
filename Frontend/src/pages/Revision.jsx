@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import api from '../api.js'
 import { BookOpenCheck, ArrowUpRight } from 'lucide-react'
 import Navbar from '../components/Navbar'
 
@@ -9,9 +9,7 @@ const Revision = () => {
 
     const fetchRevision = async () => {
         try {
-            const response = await axios.get('https://ai-interview-ready-platform.onrender.com/api/ai/revision', {
-                withCredentials: true,
-            })
+            const response = await api.get('/api/ai/revision')
             setRevisionList(response.data?.revision ?? [])
         } catch (error) {
             console.error(error)

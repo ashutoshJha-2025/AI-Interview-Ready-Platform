@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api.js";
 import { ArrowRight, Layers } from "lucide-react";
 import Navbar from "../components/Navbar.jsx";
 import CreateInterview from "../components/CreateInterview.jsx";
@@ -29,9 +29,7 @@ const Home = () => {
     useEffect(() => {
         const fetchDashboard = async () => {
             try {
-                const response = await axios.get("https://ai-interview-ready-platform.onrender.com/api/ai/home-dashboard", {
-                    withCredentials: true,
-                });
+                const response = await api.get("/api/ai/home-dashboard");
                 setDashboard({
                     stats: response.data?.stats ?? { interviewCount: 0, averageScore: 0, flashcardCount: 0 },
                     recentInterviews: response.data?.recentInterviews ?? [],

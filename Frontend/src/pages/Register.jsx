@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
 import { showSuccess, showError, showWarning, showInfo } from "../components/ToastMessageBox.jsx";
-import axios from 'axios'
+import api from '../api.js'
 
 const Register = () => {
     const [formData, setFormData] = useState({ username: '', email: '', password: '', confirmPassword: '' })
@@ -40,7 +40,7 @@ const Register = () => {
         setLoading(true)
         try {
             const { confirmPassword, ...payload } = formData
-            const result = await axios.post(`https://ai-interview-ready-platform.onrender.com/api/auth-user/register`, payload, { withCredentials: true })
+            const result = await api.post('/api/auth-user/register', payload)
             showSuccess(result.data.message)
             localStorage.setItem('email', formData.email)
             setTimeout(() => {

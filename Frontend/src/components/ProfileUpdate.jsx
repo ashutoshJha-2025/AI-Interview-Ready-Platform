@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api.js";
 import { ArrowLeft, User, MapPin, Briefcase, X, Upload } from "lucide-react";
 import { showSuccess, showError } from "../components/ToastMessageBox.jsx";
 
@@ -85,12 +85,9 @@ const ProfileUpdate = () => {
                 formPayload.append("resume", resumeFile);
             }
 
-            const result = await axios.patch(
-                `https://ai-interview-ready-platform.onrender.com/api/profile/edit-details`,
+            const result = await api.patch(
+                "/api/profile/edit-details",
                 formPayload,
-                {
-                    withCredentials: true,
-                }
             );
             showSuccess(result.data.message || "Profile updated");
             setTimeout(() => navigate("/profile"), 800);

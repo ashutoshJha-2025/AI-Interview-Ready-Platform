@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import ProfileCard from "../components/ProfileCard.jsx";
 import { Plus, Home } from "lucide-react";
-import axios from 'axios';
+import api from "../api.js";
 import { showSuccess, showError, showInfo } from '../components/ToastMessageBox.jsx'
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -12,7 +12,11 @@ const Profile = () => {
 
     async function getMe() {
         try {
+<<<<<<< HEAD
             const response = await axios.get(`https://ai-interview-ready-platform.onrender.com/api/profile/get-me`, { withCredentials: true })
+=======
+            const response = await api.get("/api/profile/get-me", { withCredentials: true })
+>>>>>>> a0c5afa (global store of api)
             setData(response?.data)
         } catch (error) {
             console.log(error.response?.data?.message || error.response?.data?.errors[0]?.msg || error.message || 'Invalid credentials')
@@ -25,7 +29,7 @@ const Profile = () => {
 
     async function logout() {
         try {
-            const response = await axios.post(`https://ai-interview-ready-platform.onrender.com/api/auth-user/logout`, {}, { withCredentials: true })
+            const response = await api.post("/api/auth-user/logout")
             showSuccess('Logged out successfully')
             navigate('/')
             localStorage.removeItem('isAuth');
