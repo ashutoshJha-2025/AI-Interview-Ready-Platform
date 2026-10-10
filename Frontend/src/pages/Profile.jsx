@@ -12,11 +12,7 @@ const Profile = () => {
 
     async function getMe() {
         try {
-<<<<<<< HEAD
-            const response = await axios.get(`https://ai-interview-ready-platform.onrender.com/api/profile/get-me`, { withCredentials: true })
-=======
             const response = await api.get("/api/profile/get-me", { withCredentials: true })
->>>>>>> a0c5afa (global store of api)
             setData(response?.data)
         } catch (error) {
             console.log(error.response?.data?.message || error.response?.data?.errors[0]?.msg || error.message || 'Invalid credentials')
